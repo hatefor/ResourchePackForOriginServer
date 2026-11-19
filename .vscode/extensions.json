@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "SPGoding.datapack-language-server",
+    "SnaveSutit.origins-mod-helper"
+  ],
+  "unwantedRecommendations": [
+    "hujohner.mc-datapack"
+  ]
+}

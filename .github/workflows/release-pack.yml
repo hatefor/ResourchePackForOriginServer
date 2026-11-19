@@ -1,0 +1,110 @@
+# Tests everything, then publishes the resource pack as a GitHub release when it changed.
+# Pull requests are tested only. A push to main is tested and, if every test passes and the pack's SHA-1 has no
+# release yet, released as pack-<sha1>. The server can point at releases/latest/download/ordertest-resources.zip.
+name: Test and release the resource pack
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: release-pack-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Generator unit tests
+        run: python -m unittest discover -s tools/photon -p "test_*.py" -v
+
+      - name: Committed effects match their code
+        run: python -I tools/photon/generate.py --verify
+
+      - name: Static checks (datapack, scripts, effects)
+        run: python tools/validate.py
+
+      - name: Headless test server (Forge + Origins + KubeJS + Photon)
+        run: |
+          chmod +x gradlew
+          python tools/testserver.py setup
+          python tools/testserver.py test -v
+
+      - name: Keep the server logs when something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-server-logs
+          path: .testserver/logs/
+          if-no-files-found: ignore
+
+  release:
+    needs: test
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build the zips
+        run: python tools/testserver.py zip
+
+      - name: Name the release after the pack's SHA-1
+        id: pack
+        run: |
+          sha1=$(sha1sum dist/ordertest-resources.zip | cut -d' ' -f1)
+          echo "sha1=$sha1" >> "$GITHUB_OUTPUT"
+          echo "tag=pack-${sha1:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Publish, unless this exact pack is already released
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.pack.outputs.tag }}
+          SHA1: ${{ steps.pack.outputs.sha1 }}
+          REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "The pack is unchanged ($TAG is already released), nothing to publish."
+            exit 0
+          fi
+          cat > notes.md <<EOF
+          Resource pack built from ${GITHUB_SHA::7} after all tests passed.
+
+          server.properties, either always the newest release:
+
+              resource-pack=https://github.com/$REPO/releases/latest/download/ordertest-resources.zip
+              resource-pack-sha1=
+              require-resource-pack=true
+
+          or pinned to this one:
+
+              resource-pack=https://github.com/$REPO/releases/download/$TAG/ordertest-resources.zip
+              resource-pack-sha1=$SHA1
+              require-resource-pack=true
+
+          The datapack (ordertest.zip) and KubeJS scripts (ordertest-kubejs.zip) are attached for the server too.
+          EOF
+          gh release create "$TAG" dist/ordertest-resources.zip dist/ordertest.zip dist/ordertest-kubejs.zip \
+            --title "Resource pack $TAG" --notes-file notes.md --latest

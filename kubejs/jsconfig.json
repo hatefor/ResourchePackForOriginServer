@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "lib": ["ES5", "ES2015"],
+    "target": "ES2015",
+    "checkJs": false
+  },
+  "include": [
+    "server_scripts/**/*.js",
+    "../run/kubejs/probe/generated/**/*.d.ts",
+    "../run/kubejs/probe/user/**/*.d.ts"
+  ]
+}

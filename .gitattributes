@@ -1,0 +1,10 @@
+# Shell scripts must keep LF so GitHub's Linux runners can execute them; batch files keep CRLF.
+* text=auto
+gradlew text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.fx binary
+*.fxproj binary
+*.jar binary
+*.zip binary
+*.png binary

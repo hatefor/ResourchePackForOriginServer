@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    { "label": "Validate pack", "type": "shell", "command": "python tools/validate.py", "group": "build", "problemMatcher": [] },
+    { "label": "Test pack", "type": "shell", "command": "python tools/testserver.py test", "group": { "kind": "test", "isDefault": true }, "problemMatcher": [] },
+    { "label": "Start test server", "type": "shell", "command": "python tools/testserver.py start", "problemMatcher": [] },
+    { "label": "Sync + reload", "type": "shell", "command": "python tools/testserver.py sync", "problemMatcher": [] },
+    { "label": "Stop test server", "type": "shell", "command": "python tools/testserver.py stop", "problemMatcher": [] }
+  ]
+}

@@ -1,0 +1,7 @@
+.testserver/
+dist/
+.idea/workspace.xml
+__pycache__/
+build/
+.gradle/
+run/

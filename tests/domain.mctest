@@ -1,0 +1,90 @@
+# The KubeJS domain engine, run headless on the test server with zombies standing in for players.
+# A line is a command, optionally "=> regex" the RCON reply must match. "wait <ticks>" pauses.
+# The typed chat phrase needs a real player and is in the in-game checklist in CLAUDE.md.
+
+forceload add -1 -1 3 3
+forceload add 30 30 75 45
+domain closeall
+kill @e[tag=t_dom]
+kill @e[type=arrow]
+summon minecraft:zombie 0.5 -60 0.5 {Tags:["t_dom","t_caster"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b}
+summon minecraft:zombie 5.5 -60 0.5 {Tags:["t_dom","t_victim"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b}
+summon minecraft:zombie 0.5 -60 30.5 {Tags:["t_dom","t_outsider"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b}
+
+# Opening catches everyone in the radius (Example has radius 12) and tags them
+domain open @e[tag=t_caster,limit=1] Example => Opened Example
+execute if entity @e[tag=t_victim,tag=ot_inside,tag=ot_in_example] => Test passed, count: 1
+execute if entity @e[tag=t_caster,tag=ot_inside,tag=ot_domain_owner] => Test passed, count: 1
+execute if entity @e[tag=t_outsider,tag=ot_inside] => Test failed
+domain list => Example at 0 -60 0 with 2 inside
+
+# The visible wall builds within a second: 290 panels for radius 12 at spacing 2.5, all on the sphere
+wait 25
+execute positioned 0.5 -60 0.5 if entity @e[type=block_display,tag=ot_shell,distance=11.9..12.1] => Test passed, count: 290
+execute if entity @e[type=block_display,tag=ot_shell] => Test passed, count: 290
+execute if entity @e[type=block_display,tag=ot_shell,nbt={block_state:{Name:"minecraft:yellow_concrete"}}] => Test passed, count: 290
+
+# One domain per owner, and none from inside another
+domain open @e[tag=t_caster,limit=1] Example => already open
+domain open @e[tag=t_victim,limit=1] Example => inside one
+
+# The wall pushes outsiders out and pulls members back in
+tp @e[tag=t_outsider] 3.5 -60 0.5
+wait 4
+execute positioned 0.5 -60 0.5 if entity @e[tag=t_outsider,distance=..12] => Test failed
+tp @e[tag=t_victim] 0.5 -60 20.5
+wait 4
+execute positioned 0.5 -60 0.5 if entity @e[tag=t_victim,distance=..12] => Test passed, count: 1
+
+# A fast arrow (4 blocks a tick) is stopped before it can jump the wall between two ticks
+summon minecraft:arrow 0.5 -59 18.5 {Tags:["t_dom","t_arrow"],NoGravity:1b,Motion:[0.0d,0.0d,-4.0d]}
+wait 6
+execute positioned 0.5 -60 0.5 if entity @e[tag=t_arrow,distance=..12] => Test failed
+
+# Effects plug in from JS (glowing for others, Example's extraComponents) and from mcfunction
+# (slowness for others and strength for the owner, examples/example_domain_tick)
+wait 25
+execute if entity @e[tag=t_victim,nbt={ActiveEffects:[{Id:24}]}] => Test passed, count: 1
+execute if entity @e[tag=t_victim,nbt={ActiveEffects:[{Id:2}]}] => Test passed, count: 1
+execute if entity @e[tag=t_caster,nbt={ActiveEffects:[{Id:5}]}] => Test passed, count: 1
+execute if entity @e[tag=t_caster,nbt={ActiveEffects:[{Id:24}]}] => Test failed
+
+# The timer closes it and releases everyone; the short effects lapse on their own
+domain time @e[tag=t_caster,limit=1] 1 => closes in 1 seconds
+wait 30
+domain list => No domains are open
+execute if entity @e[tag=t_dom,tag=ot_inside] => Test failed
+execute if entity @e[tag=t_caster,tag=ot_domain_owner] => Test failed
+execute if entity @e[type=block_display,tag=ot_shell] => Test failed
+wait 50
+execute if entity @e[tag=t_victim,nbt={ActiveEffects:[{Id:24}]}] => Test failed
+
+# The owner is on cooldown afterwards (Example cooldown is 30 s)
+domain open @e[tag=t_caster,limit=1] Example => ready again in
+
+# A name with no definition still opens with the default components
+domain open @e[tag=t_victim,limit=1] Infinite Garden => Opened Infinite Garden
+execute if entity @e[tag=t_victim,tag=ot_in_infinite_garden] => Test passed, count: 1
+domain close @e[tag=t_victim,limit=1] => Closed Infinite Garden
+
+# A domain cast from 5 blocks up keeps a walker's height when pushing it out, not into the ground
+summon minecraft:zombie 40.5 -55 40.5 {Tags:["t_dom","t_high"],NoAI:1b,NoGravity:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b}
+summon minecraft:zombie 70.5 -60 40.5 {Tags:["t_dom","t_walker"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b}
+domain open @e[tag=t_high,limit=1] Tower => Opened Tower
+tp @e[tag=t_walker] 45.5 -60 40.5
+wait 4
+execute positioned 40.5 -55 40.5 if entity @e[tag=t_walker,distance=..15] => Test failed
+execute if entity @e[tag=t_walker,y=-61,dy=0.9] => Test failed
+domain close @e[tag=t_high,limit=1] => Closed Tower
+
+# A domain with Photon effects opens and closes without errors (the effects themselves render on clients only)
+domain open @e[tag=t_walker,limit=1] Photon Example => Opened Photon Example
+wait 5
+domain close @e[tag=t_walker,limit=1] => Closed Photon Example
+
+# The origin defined in JS reached Origins through the KubeJS data injection
+power grant @e[tag=t_victim,limit=1] ordertest:cast_domain => granted the power Domain Expansion
+
+kill @e[tag=t_dom]
+forceload remove -1 -1 3 3
+forceload remove 30 30 75 45

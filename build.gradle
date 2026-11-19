@@ -1,0 +1,104 @@
+// Dev environment for the Order test pack: `./gradlew runClient` launches Forge 1.20.1 with Origins and
+// KubeJS and drops straight into a flat test world with the datapack and scripts installed.
+// There is no mod code here; the plugin is only used for its run configuration.
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.148'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+def clientWorld = 'ordertest_test'
+def testServerMods = file('.testserver/mods')
+
+legacyForge {
+    enable {
+        forgeVersion = project.forge_version
+        disableRecompilation = true
+    }
+    runs {
+        client {
+            client()
+            gameDirectory = project.file('run')
+            jvmArguments.add("-Xmx${project.client_memory}")
+            programArguments.addAll('--quickPlaySingleplayer', clientWorld)
+        }
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { url = 'https://api.modrinth.com/maven' } }
+        filter { includeGroup 'maven.modrinth' }
+    }
+    exclusiveContent {
+        forRepository { maven { url = 'https://cursemaven.com' } }
+        filter { includeGroup 'curse.maven' }
+    }
+}
+
+def serverModCoordinates = [
+    "maven.modrinth:origins-forge:${project.origins_forge_version}",
+    "maven.modrinth:caelus:${project.caelus_version}",
+    "maven.modrinth:kubejs:${project.kubejs_version}",
+    "maven.modrinth:rhino:${project.rhino_version}",
+    "maven.modrinth:architectury-api:${project.architectury_version}",
+    "curse.maven:photon-${project.photon_curse_project}:${project.photon_curse_file}",
+]
+
+configurations {
+    serverMods { transitive = false }
+}
+
+dependencies {
+    serverModCoordinates.each { modRuntimeOnly it }
+    modRuntimeOnly "maven.modrinth:probejs:${project.probejs_version}"
+    serverModCoordinates.each { serverMods it }
+}
+
+tasks.register('installServerMods', Sync) {
+    group = 'ordertest'
+    description = 'Puts the production mod jars (no ProbeJS) into the test server.'
+    from configurations.serverMods
+    into testServerMods
+}
+
+def pythonExe = providers.environmentVariable('OT_PYTHON').orElse('python')
+
+def prepareClientWorld = tasks.register('prepareClientWorld', Exec) {
+    group = 'ordertest'
+    description = 'Creates run/saves/ordertest_test, syncs the datapack and links the KubeJS scripts.'
+    commandLine pythonExe.get(), 'tools/testserver.py', 'client-world'
+    if (project.hasProperty('freshWorld')) {
+        args '--fresh'
+    }
+    // A scripted run quits by itself: -PquitAfter=<s> after joining, -PjoinTimeout=<s> if the world is never
+    // reached, -PdevCommands="/cmd|chat line" typed after joining. A plain runClient stays open.
+    if (project.hasProperty('quitAfter')) args '--quit-after', project.quitAfter
+    if (project.hasProperty('joinTimeout')) args '--join-timeout', project.joinTimeout
+    if (project.hasProperty('devCommands')) args '--commands', project.devCommands
+}
+
+def scriptedRun = ['quitAfter', 'joinTimeout', 'devCommands'].any { project.hasProperty(it) }
+// Backstop for a game that hangs before its scripts load: startup, join timeout and quit delay, plus slack.
+def scriptedRunLimitSeconds = 300 + (project.findProperty('joinTimeout') ?: 180).toString().toInteger() +
+    (project.findProperty('quitAfter') ?: 0).toString().toInteger()
+
+tasks.matching { it.name == 'runClient' }.configureEach {
+    dependsOn prepareClientWorld
+    if (scriptedRun) {
+        timeout = java.time.Duration.ofSeconds(scriptedRunLimitSeconds)
+    }
+}
+
+tasks.register('validatePack', Exec) {
+    group = 'ordertest'
+    description = 'Static checks for the datapack and scripts.'
+    commandLine pythonExe.get(), 'tools/validate.py'
+}
+
+tasks.register('testPack', Exec) {
+    group = 'ordertest'
+    description = 'Validates, boots the test server and runs tests/*.mctest.'
+    commandLine pythonExe.get(), 'tools/testserver.py', 'test'
+}
