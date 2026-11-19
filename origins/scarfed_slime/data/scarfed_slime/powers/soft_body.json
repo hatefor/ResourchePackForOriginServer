@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Soft Body",
+  "description": "DRAWBACK: a body made of jelly has little to hold it together. You have 2 fewer hearts.",
+  "modifier": {
+    "attribute": "minecraft:generic.max_health",
+    "operation": "addition",
+    "value": -4.0
+  }
+}

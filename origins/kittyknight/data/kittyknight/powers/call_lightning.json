@@ -1,0 +1,45 @@
+{
+  "type": "origins:active_self",
+  "name": "Call Lightning",
+  "description": "Sprint and press your secondary ability key to call a bolt of lightning 12 blocks in front of you. It lands after 1 second, and a glowing circle warns of the spot. Walk into it yourself to recharge. Costs 30 Storm Charge.",
+  "cooldown": 40,
+  "hud_render": {
+    "should_render": false
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sprinting"
+      },
+      {
+        "type": "origins:sneaking",
+        "inverted": true
+      },
+      {
+        "type": "origins:resource",
+        "resource": "kittyknight:storm_charge",
+        "comparison": ">=",
+        "compare_to": 30
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:change_resource",
+        "resource": "kittyknight:storm_charge",
+        "change": -30
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "function kittyknight:bolt_call"
+      }
+    ]
+  }
+}

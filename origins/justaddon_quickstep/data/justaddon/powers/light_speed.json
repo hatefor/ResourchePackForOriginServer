@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Lightspeed Core",
+  "description": "You move 150% faster than normal.",
+  "modifier": {
+    "attribute": "minecraft:generic.movement_speed",
+    "operation": "multiply_base",
+    "value": 1.5
+  }
+}

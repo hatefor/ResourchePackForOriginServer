@@ -1,0 +1,24 @@
+{
+  "powers": [
+    "deepborn:deepborn_tag",
+    "deepborn:deepborn_gills",
+    "deepborn:deepborn_water_speed",
+    "deepborn:deepborn_water_swim",
+    "deepborn:deepborn_water_strength",
+    "deepborn:deepborn_water_guard",
+    "deepborn:deepborn_moisture",
+    "deepborn:deepborn_moisture_fill",
+    "deepborn:deepborn_moisture_drain",
+    "deepborn:deepborn_dry_slow",
+    "deepborn:deepborn_dry_weak",
+    "deepborn:deepborn_dry_fatigue",
+    "deepborn:deepborn_dry_blind",
+    "deepborn:deepborn_dry_suffocate",
+    "deepborn:deepborn_rehydrate"
+  ],
+  "icon": "minecraft:heart_of_the_sea",
+  "order": 2,
+  "impact": 3,
+  "name": "Deepborn",
+  "description": "In water you are fast and powerful. On land you wither, unless you keep yourself wet."
+}

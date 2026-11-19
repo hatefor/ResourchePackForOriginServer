@@ -1,0 +1,13 @@
+{
+  "type": "apoli:prevent_sleep",
+  "name": "Restless",
+  "description": "The beast won't let you rest: you can't sleep while your rage is 30 or higher, so you'd better calm down before the moon gets to you. Your bed still sets your spawn.",
+  "condition": {
+    "type": "apoli:resource",
+    "resource": "werewolf:the_beast_within_rage",
+    "comparison": ">=",
+    "compare_to": 30
+  },
+  "message": "",
+  "set_spawn_point": true
+}

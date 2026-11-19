@@ -1,0 +1,31 @@
+{
+  "name": "Voidal Immortality",
+  "description": "Taking one instance of void damage triggers teleport into the nearest island.",
+  "type": "apoli:modify_damage_taken",
+  "damage_condition": {
+    "type": "apoli:name",
+    "name": "outOfWorld"
+  },
+  "self_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:set_fall_distance",
+        "fall_distance": 0
+      },
+      {
+        "type": "apoli:if_else",
+        "condition": {
+          "type": "apoli:command",
+          "command": "spreadplayers ~ ~ 1 100 false @s",
+          "comparison": "==",
+          "compare_to": 0
+        },
+        "if_action": {
+          "type": "apoli:execute_command",
+          "command": "function vsealkwt:void_rescue"
+        }
+      }
+    ]
+  }
+}

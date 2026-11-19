@@ -1,0 +1,9 @@
+{
+  "type": "origins:invulnerability",
+  "name": "Featherlight",
+  "description": "No fall damage.",
+  "damage_condition": {
+    "type": "origins:name",
+    "name": "fall"
+  }
+}

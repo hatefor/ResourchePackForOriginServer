@@ -1,0 +1,13 @@
+{
+  "type": "origins:resource",
+  "min": 0,
+  "max": 100,
+  "start_value": 100,
+  "name": "Storm Charge",
+  "description": "Your electricity. Static Dash costs 40 and Call Lightning costs 30. It recharges very slowly (+1 every 2 seconds). Being struck by lightning refills 60 and absorbing a Spark Orb refills 50.",
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 8
+  }
+}

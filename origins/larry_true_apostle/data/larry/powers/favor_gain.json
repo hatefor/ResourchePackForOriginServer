@@ -1,0 +1,14 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 30,
+  "condition": {
+    "type": "origins:dimension",
+    "dimension": "larry:realm"
+  },
+  "entity_action": {
+    "type": "origins:change_resource",
+    "resource": "larry:realm_favor",
+    "change": 1
+  },
+  "hidden": true
+}

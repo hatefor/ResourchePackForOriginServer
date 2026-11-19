@@ -1,0 +1,12 @@
+{
+  "type": "origins:prevent_entity_use",
+  "name": "Wanted in Every Village",
+  "description": "DRAWBACK: Villagers will not trade with you.",
+  "bientity_condition": {
+    "type": "origins:target_condition",
+    "condition": {
+      "type": "origins:entity_type",
+      "entity_type": "minecraft:villager"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "type": "apoli:multiple",
+  "name": "The Beast's Price",
+  "description": "Your armor can't hold the beast: while you're shifted it gives no protection at all. And people can smell the wolf on you: villagers and wandering traders refuse to trade with you at night or while you're shifted.",
+  "bursting_seams": {
+    "type": "apoli:conditioned_attribute",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "tick_rate": 5,
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.armor",
+        "operation": "multiply_total",
+        "value": -1.0,
+        "name": "Armor can't hold the beast"
+      },
+      {
+        "attribute": "minecraft:generic.armor_toughness",
+        "operation": "multiply_total",
+        "value": -1.0,
+        "name": "Armor can't hold the beast"
+      }
+    ]
+  },
+  "shunned": {
+    "type": "apoli:prevent_entity_use",
+    "condition": {
+      "type": "apoli:or",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:and",
+              "conditions": [
+                {
+                  "type": "apoli:time_of_day",
+                  "comparison": ">=",
+                  "compare_to": 13000
+                },
+                {
+                  "type": "apoli:time_of_day",
+                  "comparison": "<",
+                  "compare_to": 23000
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "bientity_condition": {
+      "type": "apoli:or",
+      "conditions": [
+        {
+          "type": "apoli:target_condition",
+          "condition": {
+            "type": "apoli:entity_type",
+            "entity_type": "minecraft:villager"
+          }
+        },
+        {
+          "type": "apoli:target_condition",
+          "condition": {
+            "type": "apoli:entity_type",
+            "entity_type": "minecraft:wandering_trader"
+          }
+        }
+      ]
+    },
+    "bientity_action": {
+      "type": "apoli:target_action",
+      "action": {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.villager.no",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    }
+  }
+}

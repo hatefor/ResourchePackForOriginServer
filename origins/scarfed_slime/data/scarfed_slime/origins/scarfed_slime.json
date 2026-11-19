@@ -1,0 +1,21 @@
+{
+  "name": "Scarfed Slime",
+  "description": "A cheerful green slime in a flowing red scarf. It whips, glides and glues its way through fights, but the sun is not its friend and its jelly body is delicate.",
+  "icon": {
+    "item": "minecraft:slime_ball"
+  },
+  "order": 10,
+  "impact": 2,
+  "powers": [
+    "scarfed_slime:scarf_twirl",
+    "scarfed_slime:gloop_shield",
+    "scarfed_slime:scarf_glide",
+    "scarfed_slime:sticky_strike",
+    "scarfed_slime:dewy_skin",
+    "scarfed_slime:sun_baked",
+    "scarfed_slime:soft_body",
+    "scarfed_slime:drip",
+    "scarfed_slime:scarf_flutter",
+    "scarfed_slime:glide_trail"
+  ]
+}

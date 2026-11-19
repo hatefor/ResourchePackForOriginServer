@@ -1,0 +1,6 @@
+{
+  "type": "origins:night_vision",
+  "name": "Night Eyes",
+  "description": "You see in the dark.",
+  "strength": 0.6
+}

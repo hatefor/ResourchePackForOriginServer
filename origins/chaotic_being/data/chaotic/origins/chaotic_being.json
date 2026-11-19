@@ -1,0 +1,16 @@
+{
+  "powers": [
+    "chaotic:the_unlucky",
+    "chaotic:chaotic_body",
+    "chaotic:cursed_being",
+    "chaotic:chaotic_chains",
+    "chaotic:otherworldly_dash"
+  ],
+  "icon": {
+    "item": "minecraft:ender_eye"
+  },
+  "order": 20,
+  "impact": 3,
+  "name": "Chaotic Being",
+  "description": "Chaos follows you everywhere, but you bend it to your will."
+}

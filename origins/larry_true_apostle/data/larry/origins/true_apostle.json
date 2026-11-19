@@ -1,0 +1,39 @@
+{
+  "name": "Larry's True Apostle",
+  "description": "You serve Larry and can slip into a realm of your own.",
+  "icon": {
+    "item": "minecraft:ender_eye"
+  },
+  "impact": 3,
+  "order": 100,
+  "powers": [
+    "larry:private_realm",
+    "larry:ember_form",
+    "larry:many_eyes",
+    "larry:all_seeing",
+    "larry:withering_gaze",
+    "larry:soul_snare",
+    "larry:take_along",
+    "larry:release_guests",
+    "larry:realm_favor",
+    "larry:favor_gain",
+    "larry:favor_drain",
+    "larry:asc_strength",
+    "larry:asc_speed",
+    "larry:asc_resist",
+    "larry:asc_regen",
+    "larry:asc_hearts",
+    "larry:emp_strength",
+    "larry:emp_speed",
+    "larry:emp_resist",
+    "larry:wit_weak",
+    "larry:wit_slow",
+    "larry:hol_weak",
+    "larry:hol_slow",
+    "larry:hol_fatigue",
+    "larry:hol_hearts",
+    "larry:ember_blaze",
+    "larry:cinder_skin",
+    "larry:ember_trail"
+  ]
+}

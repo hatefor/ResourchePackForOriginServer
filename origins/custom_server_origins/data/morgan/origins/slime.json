@@ -1,0 +1,15 @@
+{
+	"powers": [
+		"morgan:slime_size_effect",
+		"morgan:slime_health",
+		"morgan:slime_skin",
+		"morgan:slime_absorb",
+		"morgan:slime_no_fall",
+		"morgan:slime_bounce"
+	],
+	"icon": "minecraft:slime_ball",
+	"order": 13,
+	"impact": 1,
+	"name": "Slime",
+	"description": "A small, bouncy, gooey green being with extra health that can absorb what it holds."
+}

@@ -1,0 +1,10 @@
+{
+  "type": "apoli:attribute",
+  "name": "Zerbrechlicher Rebell",
+  "description": "Du hast zwei Herzen weniger als normale Wesen.",
+  "modifier": {
+    "attribute": "minecraft:generic.max_health",
+    "operation": "addition",
+    "value": -4.0
+  }
+}

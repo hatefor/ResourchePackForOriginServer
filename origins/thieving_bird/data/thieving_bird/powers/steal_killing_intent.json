@@ -1,0 +1,30 @@
+{
+  "type": "origins:active_self",
+  "name": "Steal Killing Intent",
+  "description": "Sneak and press Secondary on the ground to steal a foe's killing intent. It barely hurts you for a minute.",
+  "cooldown": 6000,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 7
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:on_block"
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function thieving_bird:cast_intent"
+  }
+}

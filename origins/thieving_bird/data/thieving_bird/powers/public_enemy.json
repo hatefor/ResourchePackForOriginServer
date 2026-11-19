@@ -1,0 +1,10 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Public Enemy",
+  "description": "DRAWBACK: Iron golems hunt you down.",
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function thieving_bird:golem_hunt"
+  }
+}

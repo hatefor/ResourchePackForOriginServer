@@ -1,0 +1,83 @@
+{
+	"name": "Voidpowered",
+	"description": "While in void, your hunger freezes and over time, you become stronger in many aspects.",
+	"type": "origins:multiple",
+	"taken": {
+		"type": "apoli:modify_damage_taken",
+		"modifier": {
+			"operation": "multiply_total_multiplicative",
+			"resource": "*:voidhunger_res",
+			"value": 0,
+			"modifier": {
+				"operation": "multiply_total_multiplicative",
+				"value": -1.001
+			}
+		}
+	},
+	"dealt": {
+		"type": "apoli:modify_damage_dealt",
+		"modifier": {
+			"operation": "multiply_total_multiplicative",
+			"resource": "*:voidhunger_res",
+			"value": 0,
+			"modifier": {
+				"operation": "multiply_total_multiplicative",
+				"value": -0.999
+			}
+		}
+	},
+	"mining": {
+		"type": "apoli:modify_break_speed",
+		"modifier": {
+			"operation": "multiply_total_multiplicative",
+			"resource": "*:voidhunger_res",
+			"value": 0,
+			"modifier": {
+				"operation": "multiply_total_multiplicative",
+				"value": -0.999
+			}
+		}
+	},
+	"walk": {
+		"type": "apoli:modify_attribute",
+   		"attribute": "minecraft:generic.movement_speed",
+		"modifier": {
+			"operation": "multiply_total_multiplicative",
+			"resource": "*:voidhunger_res",
+			"value": 0,
+			"modifier": {
+				"operation": "multiply_total_multiplicative",
+				"value": -0.999
+			}
+		}
+	},
+	"jump": {
+		"type": "apoli:modify_jump",
+		"modifiers": [
+			{
+				"operation": "multiply_total_multiplicative",
+				"resource": "*:voidhunger_res",
+				"value": 0,
+				"modifier": {
+					"operation": "multiply_total_multiplicative",
+					"value": -0.999
+				}
+			},
+			{
+				"operation": "min_total",
+				"value": 0.4
+			}
+		]
+	},
+	"hunger": {
+		"type": "apoli:modify_exhaustion",
+		"modifier": {
+			"operation": "multiply_total",
+			"value": -1
+		},
+		"condition": {
+			"type": "apoli:dimension",
+			"dimension": "minecraft:the_end"
+		}
+	}
+}

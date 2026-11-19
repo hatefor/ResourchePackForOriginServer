@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Quick Hands",
+  "description": "Your attacks recharge 30% faster.",
+  "modifier": {
+    "attribute": "minecraft:generic.attack_speed",
+    "operation": "multiply_base",
+    "value": 0.3
+  }
+}

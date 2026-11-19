@@ -1,0 +1,6 @@
+{
+  "type": "origins:elytra_flight",
+  "name": "Natural Wings",
+  "description": "Elytra wings that don't use your chest slot.",
+  "render_elytra": true
+}

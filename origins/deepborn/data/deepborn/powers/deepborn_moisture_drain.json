@@ -1,0 +1,18 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Moisture Drain",
+  "hidden": true,
+  "interval": 1,
+  "entity_action": {
+    "type": "origins:change_resource",
+    "resource": "deepborn:deepborn_moisture",
+    "change": -1
+  },
+  "condition": {
+    "type": "origins:fluid_height",
+    "fluid": "minecraft:water",
+    "comparison": ">",
+    "compare_to": 0.0,
+    "inverted": true
+  }
+}

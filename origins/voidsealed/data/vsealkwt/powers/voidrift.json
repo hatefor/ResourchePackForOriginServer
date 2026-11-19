@@ -1,0 +1,149 @@
+{
+  "name": "Voidal Rift",
+  "description": "Teleport up to 500 blocks to where you are looking, landing safely outside of walls. Sneaking and pressing the key hops you between the Overworld (or Nether) and the End: into the End's main island, and back to the exact spot you left from. Sneaking while looking at a player (10 blocks away, or 200 blocks away while in the End) casts them out of the dimension for 10 seconds instead.",
+  "type": "apoli:multiple",
+  "active": {
+    "type": "origins:active_self",
+    "cooldown": 1,
+    "condition": {
+      "type": "origins:or",
+      "conditions": [
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:the_end"
+            },
+            {
+              "type": "apoli:resource",
+              "resource": "*:*_end",
+              "comparison": "==",
+              "compare_to": 0
+            }
+          ]
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:the_end",
+              "inverted": true
+            },
+            {
+              "type": "apoli:resource",
+              "resource": "*:*_ow",
+              "comparison": "==",
+              "compare_to": 0
+            }
+          ]
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:execute_command",
+          "command": "scoreboard players set @s vs_ok 0"
+        },
+        {
+          "type": "apoli:if_else",
+          "condition": {
+            "type": "apoli:sneaking"
+          },
+          "if_action": {
+            "type": "apoli:execute_command",
+            "command": "function vsealkwt:shift"
+          },
+          "else_action": {
+            "type": "apoli:execute_command",
+            "command": "function vsealkwt:blink"
+          }
+        },
+        {
+          "type": "apoli:if_else",
+          "condition": {
+            "type": "apoli:command",
+            "command": "scoreboard players get @s vs_ok",
+            "comparison": ">=",
+            "compare_to": 1
+          },
+          "if_action": {
+            "type": "apoli:and",
+            "actions": [
+              {
+                "type": "apoli:trigger_cooldown",
+                "power": "*:*_end"
+              },
+              {
+                "type": "apoli:trigger_cooldown",
+                "power": "*:*_ow"
+              }
+            ]
+          }
+        },
+        {
+          "type": "apoli:if_else",
+          "condition": {
+            "type": "apoli:command",
+            "command": "scoreboard players get @s vs_ok",
+            "comparison": "==",
+            "compare_to": 2
+          },
+          "if_action": {
+            "type": "apoli:trigger_cooldown",
+            "power": "*:*_icool"
+          }
+        }
+      ]
+    }
+  },
+  "end": {
+    "type": "apoli:cooldown",
+    "cooldown": 100,
+    "hud_render": {
+      "should_render": true,
+      "bar_index": 3,
+      "condition": {
+        "type": "apoli:dimension",
+        "dimension": "minecraft:the_end"
+      }
+    }
+  },
+  "ow": {
+    "type": "apoli:cooldown",
+    "cooldown": 400,
+    "hud_render": {
+      "should_render": true,
+      "bar_index": 3,
+      "condition": {
+        "type": "apoli:dimension",
+        "dimension": "minecraft:the_end",
+        "inverted": true
+      }
+    }
+  },
+  "invul": {
+    "type": "apoli:invulnerability",
+    "damage_condition": {
+      "type": "apoli:name",
+      "name": "inWall"
+    },
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "*:*_icool",
+      "comparison": ">",
+      "compare_to": 0
+    }
+  },
+  "icool": {
+    "type": "apoli:cooldown",
+    "cooldown": 40,
+    "hud_render": {
+      "should_render": false,
+      "bar_index": 1
+    }
+  }
+}

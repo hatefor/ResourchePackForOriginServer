@@ -1,0 +1,26 @@
+{
+  "type": "apoli:action_over_time",
+  "name": "Cursed Being",
+  "description": "Anything you look at is afflicted with Darkness III.",
+  "interval": 5,
+  "entity_action": {
+    "type": "apoli:raycast",
+    "distance": 64,
+    "block": false,
+    "entity": true,
+    "bientity_action": {
+      "type": "apoli:target_action",
+      "action": {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:darkness",
+          "duration": 100,
+          "amplifier": 2,
+          "is_ambient": false,
+          "show_particles": true,
+          "show_icon": true
+        }
+      }
+    }
+  }
+}

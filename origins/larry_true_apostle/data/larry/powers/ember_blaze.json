@@ -1,0 +1,14 @@
+{
+  "type": "origins:model_color",
+  "red": 1.0,
+  "green": 0.7,
+  "blue": 0.15,
+  "alpha": 0.85,
+  "condition": {
+    "type": "origins:resource",
+    "resource": "larry:realm_favor",
+    "comparison": ">=",
+    "compare_to": 61
+  },
+  "hidden": true
+}

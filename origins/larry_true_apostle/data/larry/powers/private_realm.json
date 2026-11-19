@@ -1,0 +1,34 @@
+{
+  "type": "origins:active_self",
+  "name": "Private Realm",
+  "description": "Teleport to your private realm. Use it again to return to where you left. Press your secondary ability key. 10 second cooldown.",
+  "cooldown": 200,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 3
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:sneaking",
+    "inverted": true
+  },
+  "entity_action": {
+    "type": "origins:if_else",
+    "condition": {
+      "type": "origins:dimension",
+      "dimension": "larry:realm"
+    },
+    "if_action": {
+      "type": "origins:execute_command",
+      "command": "function larry:exit_realm"
+    },
+    "else_action": {
+      "type": "origins:execute_command",
+      "command": "function larry:enter_realm"
+    }
+  }
+}

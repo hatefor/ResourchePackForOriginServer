@@ -1,0 +1,9 @@
+{
+  "type": "apoli:prevent_item_use",
+  "hidden": true,
+  "condition": {
+    "type": "apoli:status_effect",
+    "effect": "minecraft:slowness",
+    "min_amplifier": 6
+  }
+}

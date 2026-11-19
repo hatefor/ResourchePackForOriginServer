@@ -1,0 +1,18 @@
+{
+  "name": "The Lich",
+  "description": "A being who sought to defy death. Through immense magical power they discarded their mortal coil and became something more, yet also lost much.",
+  "icon": {
+    "item": "minecraft:wither_skeleton_skull"
+  },
+  "impact": 3,
+  "order": 102,
+  "powers": [
+    "lich:undead_physiology",
+    "lich:soul_harvest",
+    "lich:death_bolt",
+    "lich:soul_siphon",
+    "lich:raise_dead",
+    "lich:phylactery",
+    "lich:soul_glow"
+  ]
+}

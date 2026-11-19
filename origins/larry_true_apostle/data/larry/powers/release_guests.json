@@ -1,0 +1,31 @@
+{
+  "type": "origins:active_self",
+  "name": "Release Guests",
+  "description": "Cast every guest in the realm back to the place they were taken from. Sneak + secondary ability key while inside the realm. 10 second cooldown.",
+  "cooldown": 200,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 7
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:dimension",
+        "dimension": "larry:realm"
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function larry:release"
+  }
+}

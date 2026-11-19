@@ -1,0 +1,23 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Born Swimmer",
+  "description": "Dolphin's Grace while in water.",
+  "condition": {
+    "type": "origins:fluid_height",
+    "fluid": "minecraft:water",
+    "comparison": ">",
+    "compare_to": 0.0
+  },
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:apply_effect",
+    "effect": {
+      "effect": "minecraft:dolphins_grace",
+      "amplifier": 1,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": true,
+      "duration": 50
+    }
+  }
+}

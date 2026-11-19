@@ -1,0 +1,22 @@
+{
+  "type": "origins:action_over_time",
+  "condition": {
+    "type": "origins:resource",
+    "resource": "larry:realm_favor",
+    "comparison": ">=",
+    "compare_to": 81
+  },
+  "hidden": true,
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:apply_effect",
+    "effect": {
+      "effect": "minecraft:resistance",
+      "amplifier": 1,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": false,
+      "duration": 50
+    }
+  }
+}

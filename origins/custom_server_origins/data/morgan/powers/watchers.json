@@ -1,0 +1,10 @@
+{
+	"type": "apoli:action_over_time",
+	"interval": 20,
+	"entity_action": {
+		"type": "apoli:execute_command",
+		"command": "function morgan:eyes"
+	},
+	"name": "Many Eyes, Many Watchers",
+	"description": "Endermen near you turn hostile, even if you never look at them."
+}

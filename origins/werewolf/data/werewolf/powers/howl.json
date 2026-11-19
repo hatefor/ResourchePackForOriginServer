@@ -1,0 +1,210 @@
+{
+  "type": "apoli:active_self",
+  "name": "Howl",
+  "description": "Shifted, sneak + primary: howl at the sky. Enemies within 10 blocks are weakened and slowed for 5 seconds, and your tamed wolves within 24 blocks get Strength II, Speed II and Regeneration for 10 seconds. Adds 10 rage.",
+  "condition": {
+    "type": "apoli:and",
+    "conditions": [
+      {
+        "type": "apoli:resource",
+        "resource": "werewolf:wolf_form_shifted",
+        "comparison": ">=",
+        "compare_to": 1
+      },
+      {
+        "type": "apoli:sneaking"
+      }
+    ]
+  },
+  "cooldown": 600,
+  "hud_render": {
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 5
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:area_of_effect",
+        "radius": 10,
+        "shape": "sphere",
+        "bientity_condition": {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:living"
+              }
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:player"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:villager"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:wandering_trader"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:iron_golem"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:snow_golem"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:armor_stand"
+              },
+              "inverted": true
+            },
+            {
+              "type": "apoli:owner",
+              "inverted": true
+            }
+          ]
+        },
+        "bientity_action": {
+          "type": "apoli:target_action",
+          "action": {
+            "type": "apoli:apply_effect",
+            "effects": [
+              {
+                "effect": "minecraft:weakness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": false,
+                "show_icon": true
+              },
+              {
+                "effect": "minecraft:slowness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": false,
+                "show_icon": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "apoli:area_of_effect",
+        "radius": 24,
+        "shape": "sphere",
+        "bientity_condition": {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:owner"
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_type",
+                "entity_type": "minecraft:wolf"
+              }
+            }
+          ]
+        },
+        "bientity_action": {
+          "type": "apoli:target_action",
+          "action": {
+            "type": "apoli:apply_effect",
+            "effects": [
+              {
+                "effect": "minecraft:strength",
+                "duration": 200,
+                "amplifier": 1,
+                "is_ambient": false,
+                "show_particles": false,
+                "show_icon": true
+              },
+              {
+                "effect": "minecraft:speed",
+                "duration": 200,
+                "amplifier": 1,
+                "is_ambient": false,
+                "show_particles": false,
+                "show_icon": true
+              },
+              {
+                "effect": "minecraft:regeneration",
+                "duration": 200,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": false,
+                "show_icon": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "apoli:change_resource",
+        "resource": "werewolf:the_beast_within_rage",
+        "change": 10,
+        "operation": "add"
+      },
+      {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.wolf.howl",
+        "volume": 1.0,
+        "pitch": 0.6
+      },
+      {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.wolf.howl",
+        "volume": 0.8,
+        "pitch": 0.9
+      },
+      {
+        "type": "apoli:spawn_particles",
+        "particle": {
+          "type": "minecraft:large_smoke",
+          "params": ""
+        },
+        "count": 40,
+        "speed": 0.12,
+        "spread": {
+          "x": 2.0,
+          "y": 0.3,
+          "z": 2.0
+        },
+        "offset_y": 0.5
+      }
+    ]
+  }
+}

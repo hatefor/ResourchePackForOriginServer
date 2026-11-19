@@ -1,0 +1,13 @@
+{
+  "type": "origins:resource",
+  "min": 0,
+  "max": 100,
+  "start_value": 50,
+  "name": "Realm Favor",
+  "description": "Larry's favor swells while you are inside your realm (+1 every 1.5 s) and drains while you are away (-1 every 3 s). 81-100 Ascendant: Strength II, Speed II, Resistance II, Regeneration, +4 hearts, Wither III gaze. 61-80 Empowered: Strength, Speed, Resistance. 41-60 Neutral. 21-40 Withered: Weakness, Slowness. 0-20 Hollow: Weakness II, Slowness II, Mining Fatigue, -3 hearts.",
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 2
+  }
+}

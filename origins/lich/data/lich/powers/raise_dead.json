@@ -1,0 +1,302 @@
+{
+  "type": "apoli:multiple",
+  "name": "Raise Dead",
+  "description": "Secondary, 2 souls: raise a skeleton archer. Sneak + secondary, 4 souls: raise an armored zombie with double health. Up to 4 minions at once; each crumbles to dust after 60 seconds. They attack whatever you hit or whatever hits you, and follow you if they fall far behind. You and they share the scoreboard team \"liches\".",
+  "skeleton": {
+    "type": "apoli:active_self",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:sneaking",
+          "inverted": true
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "lich:soul_harvest_souls",
+          "comparison": ">=",
+          "compare_to": 2
+        },
+        {
+          "type": "apoli:command",
+          "command": "execute if entity @e[tag=lich_minion,distance=..64]",
+          "comparison": "<",
+          "compare_to": 4
+        }
+      ]
+    },
+    "cooldown": 100,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 5
+    },
+    "key": {
+      "key": "key.origins.secondary_active",
+      "continuous": false
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "lich:soul_harvest_souls",
+          "change": -2,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team add liches"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team modify liches friendlyFire false"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team join liches @s"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "scoreboard objectives add lich_minion_age dummy"
+        },
+        {
+          "type": "apoli:spawn_entity",
+          "entity_type": "minecraft:skeleton",
+          "tag": "{Tags:[\"lich_minion\"],DeathLootTable:\"minecraft:empty\",CanPickUpLoot:0b,PersistenceRequired:1b,HandDropChances:[0.0f,0.0f],ArmorDropChances:[0.0f,0.0f,0.0f,0.0f],HandItems:[{id:\"minecraft:bow\",Count:1b},{}],ArmorItems:[{},{},{},{id:\"minecraft:chainmail_helmet\",Count:1b}]}",
+          "entity_action": {
+            "type": "apoli:execute_command",
+            "command": "team join liches @s"
+          }
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:soul",
+            "params": ""
+          },
+          "count": 30,
+          "speed": 0.03,
+          "spread": {
+            "x": 0.6,
+            "y": 0.2,
+            "z": 0.6
+          },
+          "offset_y": 0.1
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:large_smoke",
+            "params": ""
+          },
+          "count": 20,
+          "speed": 0.02,
+          "spread": {
+            "x": 0.6,
+            "y": 0.4,
+            "z": 0.6
+          },
+          "offset_y": 0.3
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.evoker.prepare_summon",
+          "volume": 0.8,
+          "pitch": 1.1
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:block.soul_sand.break",
+          "volume": 1.0,
+          "pitch": 0.6
+        }
+      ]
+    }
+  },
+  "zombie": {
+    "type": "apoli:active_self",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:sneaking"
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "lich:soul_harvest_souls",
+          "comparison": ">=",
+          "compare_to": 4
+        },
+        {
+          "type": "apoli:command",
+          "command": "execute if entity @e[tag=lich_minion,distance=..64]",
+          "comparison": "<",
+          "compare_to": 4
+        }
+      ]
+    },
+    "cooldown": 100,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 5,
+      "should_render": false
+    },
+    "key": {
+      "key": "key.origins.secondary_active",
+      "continuous": false
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "lich:soul_harvest_souls",
+          "change": -4,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team add liches"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team modify liches friendlyFire false"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "team join liches @s"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "scoreboard objectives add lich_minion_age dummy"
+        },
+        {
+          "type": "apoli:spawn_entity",
+          "entity_type": "minecraft:zombie",
+          "tag": "{Tags:[\"lich_minion\"],DeathLootTable:\"minecraft:empty\",CanPickUpLoot:0b,PersistenceRequired:1b,HandDropChances:[0.0f,0.0f],ArmorDropChances:[0.0f,0.0f,0.0f,0.0f],IsBaby:0b,CanBreakDoors:0b,HandItems:[{id:\"minecraft:iron_sword\",Count:1b},{}],ArmorItems:[{},{},{id:\"minecraft:iron_chestplate\",Count:1b},{id:\"minecraft:iron_helmet\",Count:1b}],Attributes:[{Name:\"generic.max_health\",Base:40.0d}],Health:40.0f}",
+          "entity_action": {
+            "type": "apoli:execute_command",
+            "command": "team join liches @s"
+          }
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:soul",
+            "params": ""
+          },
+          "count": 30,
+          "speed": 0.03,
+          "spread": {
+            "x": 0.6,
+            "y": 0.2,
+            "z": 0.6
+          },
+          "offset_y": 0.1
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:large_smoke",
+            "params": ""
+          },
+          "count": 20,
+          "speed": 0.02,
+          "spread": {
+            "x": 0.6,
+            "y": 0.4,
+            "z": 0.6
+          },
+          "offset_y": 0.3
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.evoker.prepare_summon",
+          "volume": 0.8,
+          "pitch": 0.8
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:block.soul_sand.break",
+          "volume": 1.0,
+          "pitch": 0.6
+        }
+      ]
+    }
+  },
+  "upkeep": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:execute_command",
+          "command": "scoreboard players add @e[tag=lich_minion] lich_minion_age 1"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "execute as @e[tag=lich_minion,scores={lich_minion_age=60..}] at @s run particle minecraft:soul ~ ~1 ~ 0.3 0.6 0.3 0.02 20 force"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "kill @e[tag=lich_minion,scores={lich_minion_age=60..}]"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "tp @e[tag=lich_minion,distance=20..128] @s"
+        }
+      ]
+    }
+  },
+  "command": {
+    "type": "apoli:modify_damage_dealt",
+    "modifier": {
+      "operation": "add_base_early",
+      "value": 0.0
+    },
+    "target_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:execute_command",
+          "command": "tag @s add lich_prey"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "execute unless entity @s[tag=lich_minion] as @e[tag=lich_minion,distance=..32] run damage @s 0.01 minecraft:mob_attack by @e[tag=lich_prey,limit=1]"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "tag @s remove lich_prey"
+        }
+      ]
+    }
+  },
+  "defend": {
+    "type": "apoli:attacker_action_when_hit",
+    "cooldown": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 5,
+      "should_render": false
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:execute_command",
+          "command": "tag @s add lich_prey"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "execute unless entity @s[tag=lich_minion] as @e[tag=lich_minion,distance=..32] run damage @s 0.01 minecraft:mob_attack by @e[tag=lich_prey,limit=1]"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "tag @s remove lich_prey"
+        }
+      ]
+    }
+  }
+}

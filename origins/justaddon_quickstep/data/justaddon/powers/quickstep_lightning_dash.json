@@ -1,0 +1,88 @@
+{
+  "type": "origins:active_self",
+  "name": "Lightning Dash",
+  "description": "Press your primary ability key to blast forward in a flash of lightning, shocking everything near where you start and where you land (8 damage each). 5 second cooldown.",
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "cooldown": 100,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 2
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:add_velocity",
+        "x": 0,
+        "y": 0.15,
+        "z": 3.0,
+        "space": "local",
+        "client": true,
+        "server": true
+      },
+      {
+        "type": "origins:and",
+        "actions": [
+          {
+            "type": "origins:area_of_effect",
+            "radius": 4,
+            "bientity_action": {
+              "type": "origins:target_action",
+              "action": {
+                "type": "origins:damage",
+                "amount": 8,
+                "source": {
+                  "name": "lightning_dash",
+                  "bypasses_armor": false
+                }
+              }
+            }
+          },
+          {
+            "type": "origins:execute_command",
+            "command": "particle minecraft:electric_spark ~ ~1 ~ 0.6 0.6 0.6 0.4 60 force"
+          },
+          {
+            "type": "origins:execute_command",
+            "command": "playsound minecraft:entity.lightning_bolt.thunder player @a ~ ~ ~ 0.8 1.4"
+          }
+        ]
+      },
+      {
+        "type": "origins:delay",
+        "ticks": 6,
+        "action": {
+          "type": "origins:and",
+          "actions": [
+            {
+              "type": "origins:area_of_effect",
+              "radius": 4,
+              "bientity_action": {
+                "type": "origins:target_action",
+                "action": {
+                  "type": "origins:damage",
+                  "amount": 8,
+                  "source": {
+                    "name": "lightning_dash",
+                    "bypasses_armor": false
+                  }
+                }
+              }
+            },
+            {
+              "type": "origins:execute_command",
+              "command": "particle minecraft:electric_spark ~ ~1 ~ 0.6 0.6 0.6 0.4 60 force"
+            },
+            {
+              "type": "origins:execute_command",
+              "command": "playsound minecraft:entity.lightning_bolt.thunder player @a ~ ~ ~ 0.8 1.4"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

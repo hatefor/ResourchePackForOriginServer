@@ -1,0 +1,14 @@
+{
+  "powers": [
+    "justaddon:quickstep_tag",
+    "justaddon:quickstep_speed",
+    "justaddon:quickstep_reflexes",
+    "justaddon:quickstep_frame",
+    "justaddon:quickstep_lightning_dash"
+  ],
+  "icon": "minecraft:leather_boots",
+  "order": 1,
+  "impact": 2,
+  "name": "Quickstep",
+  "description": "You live life in the fast lane and strike like lightning. Nothing outruns you, but one hit can hurt."
+}

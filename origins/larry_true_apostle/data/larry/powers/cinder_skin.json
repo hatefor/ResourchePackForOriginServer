@@ -1,0 +1,8 @@
+{
+  "type": "origins:invulnerability",
+  "name": "Cinder Skin",
+  "description": "Fire and lava cannot harm your ember body. Wade through the lava seas of your realm.",
+  "damage_condition": {
+    "type": "origins:fire"
+  }
+}

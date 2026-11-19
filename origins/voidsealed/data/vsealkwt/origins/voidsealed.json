@@ -1,0 +1,16 @@
+{
+	"powers": [
+		"vsealkwt:voidpowered",
+		"vsealkwt:voidbind",
+		"vsealkwt:voidrift",
+		"vsealkwt:voidtp",
+		"vsealkwt:voidhunger"
+	],
+	"icon": {
+		"item": "minecraft:chorus_plant"
+	},
+	"order": 10,
+	"impact": 1,
+	"name": "Voidsealed",
+	"description": "Those who were in End for too long, adapting and mastering it to uncanny amount of powers."
+}

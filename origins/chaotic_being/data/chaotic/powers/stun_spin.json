@@ -1,0 +1,14 @@
+{
+  "type": "apoli:action_over_time",
+  "interval": 1,
+  "entity_action": {
+    "type": "apoli:execute_command",
+    "command": "tp @s ~ ~ ~ ~12 ~"
+  },
+  "hidden": true,
+  "condition": {
+    "type": "apoli:status_effect",
+    "effect": "minecraft:slowness",
+    "min_amplifier": 6
+  }
+}

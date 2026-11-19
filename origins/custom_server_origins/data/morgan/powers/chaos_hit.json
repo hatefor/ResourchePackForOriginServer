@@ -1,0 +1,12 @@
+{
+	"type": "apoli:action_on_hit",
+	"bientity_action": {
+		"type": "apoli:target_action",
+		"action": {
+			"type": "apoli:execute_command",
+			"command": "function morgan:rand_hit"
+		}
+	},
+	"name": "Chaotic Strike",
+	"description": "Hitting something gives it a random level I potion effect for 10 seconds."
+}

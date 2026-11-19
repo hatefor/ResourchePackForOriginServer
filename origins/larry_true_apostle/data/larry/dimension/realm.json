@@ -1,0 +1,11 @@
+{
+  "type": "larry:realm",
+  "generator": {
+    "type": "minecraft:noise",
+    "settings": "larry:realm",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "larry:gilded_expanse"
+    }
+  }
+}

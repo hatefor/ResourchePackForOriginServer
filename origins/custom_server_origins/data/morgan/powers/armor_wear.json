@@ -1,0 +1,9 @@
+{
+	"type": "apoli:action_when_damage_taken",
+	"entity_action": {
+		"type": "apoli:execute_command",
+		"command": "function morgan:armor_wear"
+	},
+	"name": "Brittle Plating",
+	"description": "Your armor takes extra durability damage whenever you are hurt."
+}

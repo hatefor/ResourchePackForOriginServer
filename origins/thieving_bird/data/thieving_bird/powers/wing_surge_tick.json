@@ -1,0 +1,46 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 1,
+  "hidden": true,
+  "entity_action": {
+    "type": "origins:if_else",
+    "condition": {
+      "type": "origins:and",
+      "conditions": [
+        {
+          "type": "origins:fall_flying"
+        },
+        {
+          "type": "origins:scoreboard",
+          "objective": "tb_boost",
+          "comparison": ">=",
+          "compare_to": 1
+        }
+      ]
+    },
+    "if_action": {
+      "type": "origins:and",
+      "actions": [
+        {
+          "type": "origins:add_velocity",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.048,
+          "space": "local"
+        },
+        {
+          "type": "origins:execute_command",
+          "command": "scoreboard players remove @s tb_boost 1"
+        },
+        {
+          "type": "origins:execute_command",
+          "command": "particle minecraft:firework ~ ~ ~ 0 0 0 0.02 2"
+        }
+      ]
+    },
+    "else_action": {
+      "type": "origins:execute_command",
+      "command": "scoreboard players set @s tb_boost 0"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+	"type": "apoli:model_color",
+	"red": 0.75,
+	"green": 0.78,
+	"blue": 0.82,
+	"alpha": 1.0,
+	"name": "Silver Sheen",
+	"description": "Your skin has a metallic silver hue."
+}

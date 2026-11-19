@@ -1,0 +1,1 @@
+tellraw @s [{"text":"[Larry] ","color":"gold"},{"text":"The realm dimension is not loaded. Datapack dimensions only register when a world loads: save and quit, then reopen the world (or restart the server). /reload is not enough. Run /function larry:diagnose to check.","color":"red"}]

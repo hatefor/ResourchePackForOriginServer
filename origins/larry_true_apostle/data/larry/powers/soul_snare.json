@@ -1,0 +1,22 @@
+{
+  "type": "origins:active_self",
+  "name": "Soul Snare",
+  "description": "Stare down another player (range 30 blocks, walls block your gaze) and drag them into your realm as a guest. Guests are weakened and shrouded in darkness while inside, but they can leave whenever they like with /trigger larry_leave. Sneak + primary ability key. 90 second cooldown.",
+  "cooldown": 1800,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 5
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:sneaking"
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function larry:snare"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "origins:active_self",
+  "name": "Scarf Twirl",
+  "description": "Spin in place and whip your scarf in a wide ring. Everything within 4 blocks takes 2.5 hearts of damage and is knocked back. Press your primary ability key. 8 second cooldown.",
+  "cooldown": 160,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 0
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function scarfed_slime:twirl"
+  }
+}

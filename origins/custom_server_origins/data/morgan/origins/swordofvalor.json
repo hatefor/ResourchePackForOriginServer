@@ -1,0 +1,17 @@
+{
+	"powers": [
+		"morgan:flaw",
+		"morgan:irons_skin",
+		"morgan:tool_wear",
+		"morgan:tool_wear_hit",
+		"morgan:armor_wear",
+		"morgan:thorns",
+		"morgan:river_of_steel",
+		"morgan:silver_hue"
+	],
+	"icon": "minecraft:iron_block",
+	"order": 10,
+	"impact": 3,
+	"name": "Blade of Valor",
+	"description": "You are the Princess of Valor"
+}

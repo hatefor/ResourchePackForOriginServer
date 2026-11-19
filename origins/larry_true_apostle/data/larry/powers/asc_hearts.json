@@ -1,0 +1,15 @@
+{
+  "type": "origins:attribute",
+  "condition": {
+    "type": "origins:resource",
+    "resource": "larry:realm_favor",
+    "comparison": ">=",
+    "compare_to": 81
+  },
+  "modifier": {
+    "attribute": "minecraft:generic.max_health",
+    "operation": "addition",
+    "value": 8.0
+  },
+  "hidden": true
+}

@@ -1,0 +1,20 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Sun-Baked",
+  "description": "DRAWBACK: direct sunlight dries and stiffens your goo, giving you Slowness I whenever the sun is on you. Find shade or water.",
+  "condition": {
+    "type": "origins:exposed_to_sun"
+  },
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:apply_effect",
+    "effect": {
+      "effect": "minecraft:slowness",
+      "amplifier": 0,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": true,
+      "duration": 50
+    }
+  }
+}

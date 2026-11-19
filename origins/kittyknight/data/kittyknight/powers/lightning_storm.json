@@ -1,0 +1,41 @@
+{
+  "type": "origins:active_self",
+  "name": "Lightning Storm",
+  "description": "Sneak and press your secondary ability key with a FULL Storm Charge bar to spend all of it and summon a lightning storm around you for 8 seconds, with a speed boost. Bolts rain down within 13 blocks of you, never right next to you.",
+  "cooldown": 100,
+  "hud_render": {
+    "should_render": false
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:resource",
+        "resource": "kittyknight:storm_charge",
+        "comparison": ">=",
+        "compare_to": 100
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:change_resource",
+        "resource": "kittyknight:storm_charge",
+        "change": -100
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "function kittyknight:storm_start"
+      }
+    ]
+  }
+}

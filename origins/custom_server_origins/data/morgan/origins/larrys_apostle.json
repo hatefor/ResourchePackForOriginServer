@@ -1,0 +1,16 @@
+{
+	"powers": [
+		"morgan:realm_teleport",
+		"morgan:orange_body",
+		"morgan:light_weakness",
+		"morgan:watchers",
+		"morgan:all_seeing",
+		"morgan:withering_gaze",
+		"morgan:realm_spawn"
+	],
+	"icon": "minecraft:ender_eye",
+	"order": 11,
+	"impact": 2,
+	"name": "Larry's True Apostle",
+	"description": "You serve Larry and can slip into a realm of your own."
+}

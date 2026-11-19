@@ -1,0 +1,19 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Can't Swim",
+  "description": "Your static-charged body is too heavy for water. You sink like a stone and cannot swim up.",
+  "interval": 1,
+  "condition": {
+    "type": "origins:fluid_height",
+    "fluid": "minecraft:water",
+    "comparison": ">",
+    "compare_to": 0.0
+  },
+  "entity_action": {
+    "type": "origins:add_velocity",
+    "x": 0.0,
+    "y": -0.12,
+    "z": 0.0,
+    "space": "world"
+  }
+}

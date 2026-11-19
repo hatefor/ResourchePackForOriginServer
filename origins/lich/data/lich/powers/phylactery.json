@@ -1,0 +1,149 @@
+{
+  "type": "apoli:multiple",
+  "name": "Phylactery",
+  "description": "Your soul is hidden in a phylactery. When you would die, it pulls you back, as long as you hold at least 10 souls. That burns the 10 souls, and the phylactery needs 5 minutes to reforge (the bar) before it can save you again.",
+  "reforge": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 300,
+    "start_value": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 4,
+      "condition": {
+        "type": "apoli:resource",
+        "resource": "lich:phylactery_reforge",
+        "comparison": ">",
+        "compare_to": 0
+      }
+    }
+  },
+  "ward": {
+    "type": "apoli:prevent_death",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "lich:soul_harvest_souls",
+          "comparison": ">=",
+          "compare_to": 10
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "lich:phylactery_reforge",
+          "comparison": "==",
+          "compare_to": 0
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "lich:soul_harvest_souls",
+          "change": -10,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "lich:phylactery_reforge",
+          "change": 300,
+          "operation": "set"
+        },
+        {
+          "type": "apoli:heal",
+          "amount": 8.0
+        },
+        {
+          "type": "apoli:apply_effect",
+          "effects": [
+            {
+              "effect": "minecraft:absorption",
+              "duration": 200,
+              "amplifier": 1,
+              "is_ambient": false,
+              "show_particles": false,
+              "show_icon": true
+            },
+            {
+              "effect": "minecraft:resistance",
+              "duration": 100,
+              "amplifier": 2,
+              "is_ambient": false,
+              "show_particles": false,
+              "show_icon": true
+            },
+            {
+              "effect": "minecraft:fire_resistance",
+              "duration": 200,
+              "amplifier": 0,
+              "is_ambient": false,
+              "show_particles": false,
+              "show_icon": true
+            }
+          ]
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:soul",
+            "params": ""
+          },
+          "count": 60,
+          "speed": 0.08,
+          "spread": {
+            "x": 0.6,
+            "y": 1.0,
+            "z": 0.6
+          },
+          "offset_y": 1.0
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:sculk_soul",
+            "params": ""
+          },
+          "count": 30,
+          "speed": 0.05,
+          "spread": {
+            "x": 0.6,
+            "y": 1.0,
+            "z": 0.6
+          },
+          "offset_y": 1.0
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:item.totem.use",
+          "volume": 0.7,
+          "pitch": 0.5
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wither.ambient",
+          "volume": 0.6,
+          "pitch": 1.4
+        }
+      ]
+    }
+  },
+  "tick": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "lich:phylactery_reforge",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "lich:phylactery_reforge",
+      "change": -1,
+      "operation": "add"
+    }
+  }
+}

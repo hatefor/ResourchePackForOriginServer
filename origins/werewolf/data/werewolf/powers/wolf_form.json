@@ -1,0 +1,534 @@
+{
+  "type": "apoli:multiple",
+  "name": "Wolf Form",
+  "description": "Secondary: shift into a wolf at night, or any time your rage is at least 25; secondary again changes you back. Shifted you're faster and stronger with 3 more hearts, see in the dark, heal at night, jump higher, land softly and can smell living things (they glow red within 20 blocks). Claws work best bare: holding an item halves your damage, bare claws can make enemies bleed. You can't use items except to eat meat, you get hungry twice as fast, and rage drains 2 a second; at zero you change back.",
+  "shifted": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 1,
+    "start_value": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 0,
+      "should_render": false
+    }
+  },
+  "shift": {
+    "type": "apoli:active_self",
+    "key": {
+      "key": "key.origins.secondary_active",
+      "continuous": false
+    },
+    "cooldown": 60,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 0,
+      "should_render": false
+    },
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1,
+          "inverted": true
+        },
+        {
+          "type": "apoli:sneaking",
+          "inverted": true
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:predicate",
+              "predicate": "werewolf:new_moon"
+            }
+          ],
+          "inverted": true
+        },
+        {
+          "type": "apoli:or",
+          "conditions": [
+            {
+              "type": "apoli:and",
+              "conditions": [
+                {
+                  "type": "apoli:dimension",
+                  "dimension": "minecraft:overworld"
+                },
+                {
+                  "type": "apoli:and",
+                  "conditions": [
+                    {
+                      "type": "apoli:time_of_day",
+                      "comparison": ">=",
+                      "compare_to": 13000
+                    },
+                    {
+                      "type": "apoli:time_of_day",
+                      "comparison": "<",
+                      "compare_to": 23000
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "apoli:resource",
+              "resource": "werewolf:the_beast_within_rage",
+              "comparison": ">=",
+              "compare_to": 25
+            }
+          ]
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "change": 1,
+          "operation": "set"
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:the_beast_within_rage",
+          "change": 20,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wolf.howl",
+          "volume": 1.0,
+          "pitch": 0.8
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wolf.growl",
+          "volume": 1.0,
+          "pitch": 0.6
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:large_smoke",
+            "params": ""
+          },
+          "count": 30,
+          "speed": 0.04,
+          "spread": {
+            "x": 0.5,
+            "y": 0.9,
+            "z": 0.5
+          },
+          "offset_y": 0.9
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:crit",
+            "params": ""
+          },
+          "count": 25,
+          "speed": 0.3,
+          "spread": {
+            "x": 0.5,
+            "y": 0.9,
+            "z": 0.5
+          },
+          "offset_y": 0.9
+        }
+      ]
+    }
+  },
+  "revert": {
+    "type": "apoli:active_self",
+    "key": {
+      "key": "key.origins.secondary_active",
+      "continuous": false
+    },
+    "cooldown": 60,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 0,
+      "should_render": false
+    },
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:predicate",
+              "predicate": "werewolf:full_moon"
+            }
+          ],
+          "inverted": true
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "change": 0,
+          "operation": "set"
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wolf.whine",
+          "volume": 0.8,
+          "pitch": 0.9
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:cloud",
+            "params": ""
+          },
+          "count": 20,
+          "speed": 0.03,
+          "spread": {
+            "x": 0.5,
+            "y": 0.9,
+            "z": 0.5
+          },
+          "offset_y": 0.9
+        }
+      ]
+    }
+  },
+  "drain": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:predicate",
+              "predicate": "werewolf:full_moon"
+            }
+          ],
+          "inverted": true
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "werewolf:the_beast_within_rage",
+      "change": -2,
+      "operation": "add"
+    }
+  },
+  "body": {
+    "type": "apoli:conditioned_attribute",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "tick_rate": 10,
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.attack_damage",
+        "operation": "addition",
+        "value": 5.0,
+        "name": "Wolf claws"
+      },
+      {
+        "attribute": "minecraft:generic.attack_speed",
+        "operation": "multiply_total",
+        "value": 0.4,
+        "name": "Wolf ferocity"
+      },
+      {
+        "attribute": "minecraft:generic.movement_speed",
+        "operation": "multiply_total",
+        "value": 0.25,
+        "name": "Wolf stride"
+      },
+      {
+        "attribute": "minecraft:generic.max_health",
+        "operation": "addition",
+        "value": 6.0,
+        "name": "Wolf vigor"
+      }
+    ]
+  },
+  "clumsy_paws": {
+    "type": "apoli:modify_damage_dealt",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:equipped_item",
+          "equipment_slot": "mainhand",
+          "item_condition": {
+            "type": "apoli:empty"
+          },
+          "inverted": true
+        }
+      ]
+    },
+    "modifier": {
+      "operation": "multiply_total_multiplicative",
+      "value": -0.5
+    }
+  },
+  "rend": {
+    "type": "apoli:modify_damage_dealt",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:equipped_item",
+          "equipment_slot": "mainhand",
+          "item_condition": {
+            "type": "apoli:empty"
+          }
+        }
+      ]
+    },
+    "modifier": {
+      "operation": "add_base_early",
+      "value": 0.0
+    },
+    "target_action": {
+      "type": "apoli:chance",
+      "chance": 0.3,
+      "action": {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:wither",
+          "duration": 60,
+          "amplifier": 0,
+          "is_ambient": false,
+          "show_particles": false,
+          "show_icon": true
+        }
+      }
+    }
+  },
+  "paws_only": {
+    "type": "apoli:prevent_item_use",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "item_condition": {
+      "type": "apoli:meat",
+      "inverted": true
+    }
+  },
+  "hungry": {
+    "type": "apoli:modify_exhaustion",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "modifier": {
+      "name": "The wolf is always hungry",
+      "value": 1.0,
+      "operation": "multiply_base"
+    }
+  },
+  "bound": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "entity_action": {
+      "type": "apoli:apply_effect",
+      "effect": {
+        "effect": "minecraft:jump_boost",
+        "duration": 30,
+        "amplifier": 0,
+        "is_ambient": false,
+        "show_particles": false,
+        "show_icon": false
+      }
+    }
+  },
+  "soft_landing": {
+    "type": "apoli:modify_damage_taken",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "damage_condition": {
+      "type": "apoli:in_tag",
+      "tag": "minecraft:is_fall"
+    },
+    "modifier": {
+      "operation": "multiply_total_multiplicative",
+      "value": -0.5
+    }
+  },
+  "night_heal": {
+    "type": "apoli:action_over_time",
+    "interval": 40,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        },
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:and",
+              "conditions": [
+                {
+                  "type": "apoli:time_of_day",
+                  "comparison": ">=",
+                  "compare_to": 13000
+                },
+                {
+                  "type": "apoli:time_of_day",
+                  "comparison": "<",
+                  "compare_to": 23000
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:apply_effect",
+      "effect": {
+        "effect": "minecraft:regeneration",
+        "duration": 60,
+        "amplifier": 0,
+        "is_ambient": false,
+        "show_particles": false,
+        "show_icon": false
+      }
+    }
+  },
+  "eyes": {
+    "type": "apoli:night_vision",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "strength": 1.0
+  },
+  "nose": {
+    "type": "apoli:entity_glow",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "use_teams": false,
+    "red": 0.9,
+    "green": 0.15,
+    "blue": 0.15,
+    "entity_condition": {
+      "type": "apoli:living"
+    },
+    "bientity_condition": {
+      "type": "apoli:distance",
+      "comparison": "<=",
+      "compare_to": 20
+    }
+  },
+  "fur": {
+    "type": "apoli:model_color",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    },
+    "red": 0.62,
+    "green": 0.55,
+    "blue": 0.48,
+    "alpha": 1.0
+  },
+  "shedding": {
+    "type": "apoli:particle",
+    "particle": {
+      "type": "minecraft:ash",
+      "params": ""
+    },
+    "frequency": 4,
+    "visible_in_first_person": false,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:wolf_form_shifted",
+      "comparison": ">=",
+      "compare_to": 1
+    }
+  }
+}

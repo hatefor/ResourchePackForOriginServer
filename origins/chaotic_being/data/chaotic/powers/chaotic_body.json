@@ -1,0 +1,209 @@
+{
+  "type": "apoli:multiple",
+  "name": "Chaotic Body",
+  "description": "You deal +5 damage. Whatever hits you gets a random negative effect (5s, level 1). You have permanent Absorption I that instantly restores itself when depleted.",
+  "damage": {
+    "type": "apoli:modify_damage_dealt",
+    "hidden": true,
+    "modifier": {
+      "operation": "addition",
+      "value": 5
+    }
+  },
+  "absorption": {
+    "type": "apoli:effect",
+    "hidden": true,
+    "effect": {
+      "effect": "minecraft:absorption",
+      "amplifier": 0,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": true
+    }
+  },
+  "retaliate": {
+    "type": "apoli:action_when_hit",
+    "hidden": true,
+    "cooldown": 1,
+    "bientity_action": {
+      "type": "apoli:actor_action",
+      "action": {
+        "type": "apoli:choice",
+        "actions": [
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:slowness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:mining_fatigue",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:nausea",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:blindness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:hunger",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:weakness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:poison",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:wither",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:levitation",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:unluck",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          },
+          {
+            "element": {
+              "type": "apoli:apply_effect",
+              "effect": {
+                "effect": "minecraft:darkness",
+                "duration": 100,
+                "amplifier": 0,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            },
+            "weight": 1
+          }
+        ]
+      }
+    }
+  },
+  "refill": {
+    "type": "apoli:action_over_time",
+    "interval": 5,
+    "hidden": true,
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:execute_command",
+          "command": "execute if entity @s[nbt={AbsorptionAmount:0.0f}] run effect clear @s minecraft:absorption"
+        },
+        {
+          "type": "apoli:execute_command",
+          "command": "execute if entity @s[nbt={AbsorptionAmount:0.0f}] run effect give @s minecraft:absorption 1000000 0 true"
+        }
+      ]
+    }
+  }
+}

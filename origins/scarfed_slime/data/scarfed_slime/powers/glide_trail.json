@@ -1,0 +1,21 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 2,
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:on_block",
+        "inverted": true
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function scarfed_slime:glide_fx"
+  },
+  "hidden": true
+}

@@ -1,0 +1,54 @@
+{
+  "type": "apoli:active_self",
+  "name": "72 Verwandlungen",
+  "description": "Du verwandelst dich kurz in ein unauffälliges Wesen: Unsichtbarkeit und ein Geschwindigkeitsschub. (Sekundärfähigkeit-Taste)",
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "cooldown": 1200,
+  "hud_render": {
+    "should_render": true
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:invisibility",
+          "duration": 300,
+          "amplifier": 0,
+          "is_ambient": false,
+          "show_particles": false,
+          "show_icon": true
+        }
+      },
+      {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:speed",
+          "duration": 300,
+          "amplifier": 1,
+          "is_ambient": false,
+          "show_particles": false,
+          "show_icon": true
+        }
+      },
+      {
+        "type": "apoli:spawn_particles",
+        "particle": {
+          "type": "minecraft:poof"
+        },
+        "count": 30,
+        "speed": 0.1,
+        "force": true,
+        "spread": {
+          "x": 0.4,
+          "y": 0.8,
+          "z": 0.4
+        }
+      }
+    ]
+  }
+}

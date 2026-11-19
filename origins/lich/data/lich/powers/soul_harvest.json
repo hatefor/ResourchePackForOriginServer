@@ -1,0 +1,60 @@
+{
+  "type": "apoli:multiple",
+  "name": "Soul Harvest",
+  "description": "Each creature you kill has a 40% chance to give you its soul (the cyan bar, up to 30). Souls fuel every spell you cast.",
+  "souls": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 30,
+    "start_value": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 6
+    }
+  },
+  "reap": {
+    "type": "apoli:self_action_on_kill",
+    "cooldown": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 6,
+      "should_render": false
+    },
+    "entity_action": {
+      "type": "apoli:chance",
+      "chance": 0.4,
+      "action": {
+        "type": "apoli:and",
+        "actions": [
+          {
+            "type": "apoli:change_resource",
+            "resource": "lich:soul_harvest_souls",
+            "change": 1,
+            "operation": "add"
+          },
+          {
+            "type": "apoli:play_sound",
+            "sound": "minecraft:particle.soul_escape",
+            "volume": 1.0,
+            "pitch": 1.0
+          },
+          {
+            "type": "apoli:spawn_particles",
+            "particle": {
+              "type": "minecraft:soul",
+              "params": ""
+            },
+            "count": 8,
+            "speed": 0.02,
+            "spread": {
+              "x": 0.3,
+              "y": 0.5,
+              "z": 0.3
+            },
+            "offset_y": 1.0
+          }
+        ]
+      }
+    }
+  }
+}

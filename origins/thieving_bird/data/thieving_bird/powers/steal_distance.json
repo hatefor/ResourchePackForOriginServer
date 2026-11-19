@@ -1,0 +1,31 @@
+{
+  "type": "origins:active_self",
+  "name": "Steal Distance",
+  "description": "Sneak and press Primary in the air to steal the distance ahead and blink there.",
+  "cooldown": 600,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 5
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:on_block",
+        "inverted": true
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function thieving_bird:blink"
+  }
+}

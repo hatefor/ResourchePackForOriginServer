@@ -1,0 +1,15 @@
+# Test Origin: headless tests. A line is a command, optionally "=> regex" the reply must match; "wait <ticks>" pauses.
+# Every power in data/ and every OrderTest.power is also checked to load by the test runner itself.
+
+# forceload loads the chunk asynchronously, so wait before summoning into it.
+forceload add 1232 1232 1248 1248
+wait 20
+kill @e[tag=t_test_origin]
+summon minecraft:zombie 1240.5 -60 1240.5 {Tags:["t_test_origin"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b} => Summoned new Zombie
+
+domain open @e[tag=t_test_origin,limit=1] Test Origin => Opened Test Origin
+execute if entity @e[tag=t_test_origin,tag=ot_in_test_origin] => Test passed, count: 1
+domain close @e[tag=t_test_origin,limit=1] => Closed Test Origin
+
+kill @e[tag=t_test_origin]
+forceload remove 1232 1232 1248 1248

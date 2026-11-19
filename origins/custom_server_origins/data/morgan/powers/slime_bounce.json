@@ -1,0 +1,22 @@
+{
+	"type": "apoli:action_on_land",
+	"entity_action": {
+		"type": "apoli:and",
+		"actions": [
+			{
+				"type": "apoli:add_velocity",
+				"y": 0.75
+			},
+			{
+				"type": "apoli:execute_command",
+				"command": "playsound minecraft:entity.slime.jump master @a ~ ~ ~ 1 1"
+			}
+		]
+	},
+	"condition": {
+		"type": "apoli:sneaking",
+		"inverted": true
+	},
+	"name": "Bouncy",
+	"description": "You take no fall damage and bounce when you land. Sneak to land without bouncing."
+}

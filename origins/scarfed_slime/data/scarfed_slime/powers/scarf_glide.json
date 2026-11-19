@@ -1,0 +1,29 @@
+{
+  "type": "origins:action_over_time",
+  "name": "Scarf Glide",
+  "description": "Hold sneak in mid-air and your scarf catches the wind, so you drift down gently and take no fall damage.",
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:on_block",
+        "inverted": true
+      }
+    ]
+  },
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:apply_effect",
+    "effect": {
+      "effect": "minecraft:slow_falling",
+      "amplifier": 0,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": false,
+      "duration": 50
+    }
+  }
+}

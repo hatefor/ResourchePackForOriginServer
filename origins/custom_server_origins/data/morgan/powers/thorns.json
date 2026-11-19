@@ -1,0 +1,16 @@
+{
+	"type": "apoli:action_when_hit",
+	"bientity_action": {
+		"type": "apoli:invert",
+		"action": {
+			"type": "apoli:damage",
+			"amount": 3,
+			"source": {
+				"name": "thorns"
+			}
+		}
+	},
+	"cooldown": 10,
+	"name": "Sharp Skin",
+	"description": "Attackers take damage when they hit you."
+}

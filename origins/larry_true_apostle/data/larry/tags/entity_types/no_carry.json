@@ -1,0 +1,11 @@
+{
+  "values": [
+    "minecraft:marker",
+    "minecraft:lightning_bolt",
+    "minecraft:fishing_bobber",
+    "minecraft:ender_dragon",
+    "minecraft:area_effect_cloud",
+    "minecraft:interaction",
+    "minecraft:eye_of_ender"
+  ]
+}

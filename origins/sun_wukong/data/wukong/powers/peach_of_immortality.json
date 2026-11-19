@@ -1,0 +1,43 @@
+{
+  "type": "apoli:action_on_item_use",
+  "name": "Pfirsich der Unsterblichkeit",
+  "description": "Äpfel und goldene Äpfel sind deine Lieblingsspeise und geben dir Regeneration und Absorption.",
+  "item_condition": {
+    "type": "apoli:or",
+    "conditions": [
+      {
+        "type": "apoli:ingredient",
+        "ingredient": { "item": "minecraft:apple" }
+      },
+      {
+        "type": "apoli:ingredient",
+        "ingredient": { "item": "minecraft:golden_apple" }
+      },
+      {
+        "type": "apoli:ingredient",
+        "ingredient": { "item": "minecraft:enchanted_golden_apple" }
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:regeneration",
+          "duration": 200,
+          "amplifier": 1
+        }
+      },
+      {
+        "type": "apoli:apply_effect",
+        "effect": {
+          "effect": "minecraft:absorption",
+          "duration": 600,
+          "amplifier": 0
+        }
+      }
+    ]
+  }
+}

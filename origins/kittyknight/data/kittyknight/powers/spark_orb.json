@@ -1,0 +1,46 @@
+{
+  "type": "origins:active_self",
+  "name": "Spark Orb",
+  "description": "Press your primary ability key (not sprinting) to release a very slow ball of electricity. Dash into it to absorb it and gain 50 Storm Charge, enough for more dashes. It zaps mobs it drifts through and lasts 20 seconds. Costs 25 Storm Charge.",
+  "cooldown": 30,
+  "hud_render": {
+    "should_render": false
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking",
+        "inverted": true
+      },
+      {
+        "type": "origins:sprinting",
+        "inverted": true
+      },
+      {
+        "type": "origins:resource",
+        "resource": "kittyknight:storm_charge",
+        "comparison": ">=",
+        "compare_to": 25
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:change_resource",
+        "resource": "kittyknight:storm_charge",
+        "change": -25
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "function kittyknight:orb_cast"
+      }
+    ]
+  }
+}

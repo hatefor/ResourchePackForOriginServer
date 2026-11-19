@@ -1,0 +1,18 @@
+{
+  "powers": [
+    "justaddon:light_tag",
+    "justaddon:light_hands",
+    "justaddon:light_speed",
+    "justaddon:light_body",
+    "justaddon:light_sight",
+    "justaddon:light_weightless",
+    "justaddon:light_flare",
+    "justaddon:light_rush"
+  ],
+  "icon": "minecraft:nether_star",
+  "order": 99,
+  "impact": 3,
+  "name": "Being of Light",
+  "description": "The final form of Quickstep. You are no longer a runner: you are the light itself.",
+  "unchoosable": true
+}

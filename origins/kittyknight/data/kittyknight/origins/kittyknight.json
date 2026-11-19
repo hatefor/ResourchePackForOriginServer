@@ -1,0 +1,24 @@
+{
+  "name": "KittyKnight",
+  "description": "A small, fragile knight crackling with static. Dash through enemies in a burst of lightning, then call down storms to recharge.",
+  "icon": {
+    "item": "minecraft:lightning_rod"
+  },
+  "impact": 2,
+  "order": 100,
+  "powers": [
+    "kittyknight:storm_charge",
+    "kittyknight:static_dash",
+    "kittyknight:call_lightning",
+    "kittyknight:frail_frame",
+    "kittyknight:storm_recharge",
+    "kittyknight:storm_conductor",
+    "kittyknight:storm_grounded",
+    "kittyknight:spark_orb",
+    "kittyknight:lightning_storm",
+    "kittyknight:cant_swim",
+    "kittyknight:orb_recharge",
+    "kittyknight:night_eyes",
+    "kittyknight:feline_landing"
+  ]
+}

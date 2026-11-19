@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Frail Frame",
+  "description": "A body built of static and nerves. You have 3 fewer hearts.",
+  "modifier": {
+    "attribute": "minecraft:generic.max_health",
+    "operation": "addition",
+    "value": -6.0
+  }
+}

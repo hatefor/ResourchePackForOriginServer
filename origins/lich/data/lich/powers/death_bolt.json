@@ -1,0 +1,117 @@
+{
+  "type": "apoli:active_self",
+  "name": "Death Bolt",
+  "description": "Primary, 1 soul: fire a bolt of dark energy. It deals 7 magic damage and withers the living, and heals the undead, your minions included.",
+  "condition": {
+    "type": "apoli:and",
+    "conditions": [
+      {
+        "type": "apoli:sneaking",
+        "inverted": true
+      },
+      {
+        "type": "apoli:resource",
+        "resource": "lich:soul_harvest_souls",
+        "comparison": ">=",
+        "compare_to": 1
+      }
+    ]
+  },
+  "cooldown": 30,
+  "hud_render": {
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 1
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:change_resource",
+        "resource": "lich:soul_harvest_souls",
+        "change": -1,
+        "operation": "add"
+      },
+      {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.wither.shoot",
+        "volume": 0.6,
+        "pitch": 1.4
+      },
+      {
+        "type": "apoli:raycast",
+        "distance": 24,
+        "shape_type": "collider",
+        "fluid_handling": "none",
+        "block": true,
+        "entity": true,
+        "command_along_ray": "particle minecraft:soul_fire_flame ~ ~ ~ 0.02 0.02 0.02 0.01 2 force",
+        "command_step": 1,
+        "command_along_ray_only_on_hit": false,
+        "bientity_action": {
+          "type": "apoli:if_else",
+          "condition": {
+            "type": "apoli:target_condition",
+            "condition": {
+              "type": "apoli:entity_group",
+              "group": "undead"
+            }
+          },
+          "if_action": {
+            "type": "apoli:and",
+            "actions": [
+              {
+                "type": "apoli:target_action",
+                "action": {
+                  "type": "apoli:heal",
+                  "amount": 6.0
+                }
+              },
+              {
+                "type": "apoli:target_action",
+                "action": {
+                  "type": "apoli:execute_command",
+                  "command": "particle minecraft:soul ~ ~1 ~ 0.3 0.5 0.3 0.02 10 force"
+                }
+              }
+            ]
+          },
+          "else_action": {
+            "type": "apoli:and",
+            "actions": [
+              {
+                "type": "apoli:damage",
+                "amount": 7.0,
+                "damage_type": "minecraft:indirect_magic"
+              },
+              {
+                "type": "apoli:target_action",
+                "action": {
+                  "type": "apoli:apply_effect",
+                  "effect": {
+                    "effect": "minecraft:wither",
+                    "duration": 60,
+                    "amplifier": 0,
+                    "is_ambient": false,
+                    "show_particles": false,
+                    "show_icon": true
+                  }
+                }
+              },
+              {
+                "type": "apoli:target_action",
+                "action": {
+                  "type": "apoli:execute_command",
+                  "command": "particle minecraft:sculk_soul ~ ~1 ~ 0.3 0.5 0.3 0.02 10 force"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

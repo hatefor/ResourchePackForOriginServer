@@ -1,0 +1,147 @@
+{
+  "type": "apoli:multiple",
+  "name": "Otherworldly Dash",
+  "description": "[Secondary key] Hold to charge, release to dash in the direction you're looking. The longer you hold, the further you go (max 1 second). 3 second cooldown after each dash.",
+  "charge": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 20,
+    "start_value": 0,
+    "hud_render": {
+      "should_render": true
+    },
+    "hidden": true,
+    "min_action": {
+      "type": "apoli:change_resource",
+      "resource": "chaotic:otherworldly_dash_cooldown",
+      "change": 60,
+      "operation": "set"
+    }
+  },
+  "held": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 2,
+    "start_value": 0,
+    "hud_render": {
+      "should_render": false
+    },
+    "hidden": true
+  },
+  "hold": {
+    "type": "apoli:active_self",
+    "hidden": true,
+    "cooldown": 1,
+    "hud_render": {
+      "should_render": false
+    },
+    "key": {
+      "key": "key.origins.secondary_active",
+      "continuous": true
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "chaotic:otherworldly_dash_charge",
+          "change": 1
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "chaotic:otherworldly_dash_held",
+          "change": 2,
+          "operation": "set"
+        }
+      ]
+    },
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "chaotic:otherworldly_dash_cooldown",
+      "comparison": "==",
+      "compare_to": 0
+    }
+  },
+  "decay": {
+    "type": "apoli:action_over_time",
+    "interval": 1,
+    "hidden": true,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "chaotic:otherworldly_dash_held",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "chaotic:otherworldly_dash_held",
+      "change": -1
+    }
+  },
+  "dash": {
+    "type": "apoli:action_over_time",
+    "interval": 1,
+    "hidden": true,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "chaotic:otherworldly_dash_held",
+          "comparison": "==",
+          "compare_to": 0
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "chaotic:otherworldly_dash_charge",
+          "comparison": ">",
+          "compare_to": 0
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:add_velocity",
+          "x": 0,
+          "y": 0,
+          "z": 1.6,
+          "space": "local",
+          "set": true
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "chaotic:otherworldly_dash_charge",
+          "change": -1
+        }
+      ]
+    }
+  },
+  "cooldown": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 60,
+    "start_value": 0,
+    "hud_render": {
+      "should_render": true
+    },
+    "hidden": true
+  },
+  "cooldown_tick": {
+    "type": "apoli:action_over_time",
+    "interval": 1,
+    "hidden": true,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "chaotic:otherworldly_dash_cooldown",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "chaotic:otherworldly_dash_cooldown",
+      "change": -1
+    }
+  }
+}

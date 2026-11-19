@@ -1,0 +1,26 @@
+{
+  "type": "apoli:multiple",
+  "name": "The Unlucky",
+  "description": "Every 2 minutes you get struck by lightning, taking 4 damage.",
+  "strike": {
+    "type": "apoli:action_over_time",
+    "interval": 2400,
+    "hidden": true,
+    "entity_action": {
+      "type": "apoli:execute_command",
+      "command": "summon minecraft:lightning_bolt ~ ~ ~"
+    }
+  },
+  "reduce": {
+    "type": "apoli:modify_damage_taken",
+    "hidden": true,
+    "damage_condition": {
+      "type": "apoli:name",
+      "name": "lightningBolt"
+    },
+    "modifier": {
+      "operation": "addition",
+      "value": -1
+    }
+  }
+}

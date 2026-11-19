@@ -1,0 +1,17 @@
+{
+  "type": "origins:active_self",
+  "name": "Ascend",
+  "description": "Press your secondary ability key to view your progress on every trial. When all four are met, pressing it ascends you (same as /trigger evo).",
+  "key": {
+    "key": "key.origins.secondary_active"
+  },
+  "cooldown": 20,
+  "hud_render": {
+    "should_render": false
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function justaddon:try_evolve",
+    "permission_level": 4
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "origins:multiple",
+  "name": "No Shields",
+  "description": "DRAWBACK: A bird cannot hold a shield.",
+  "block": {
+    "type": "origins:prevent_item_use",
+    "item_condition": {
+      "type": "origins:ingredient",
+      "ingredient": {
+        "item": "minecraft:shield"
+      }
+    }
+  },
+  "guard": {
+    "type": "origins:action_over_time",
+    "interval": 1,
+    "entity_action": {
+      "type": "origins:execute_command",
+      "command": "function thieving_bird:shield_guard"
+    }
+  }
+}

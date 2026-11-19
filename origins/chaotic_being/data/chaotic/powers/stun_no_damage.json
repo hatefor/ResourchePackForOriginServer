@@ -1,0 +1,13 @@
+{
+  "type": "apoli:modify_damage_dealt",
+  "modifier": {
+    "operation": "multiply_total",
+    "value": -1
+  },
+  "hidden": true,
+  "condition": {
+    "type": "apoli:status_effect",
+    "effect": "minecraft:slowness",
+    "min_amplifier": 6
+  }
+}

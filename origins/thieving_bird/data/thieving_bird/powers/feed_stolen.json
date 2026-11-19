@@ -1,0 +1,25 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 1,
+  "condition": {
+    "type": "origins:scoreboard",
+    "objective": "tb_owed",
+    "comparison": ">=",
+    "compare_to": 1
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:feed",
+        "food": 1,
+        "saturation": 0.5
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "scoreboard players remove @s tb_owed 1"
+      }
+    ]
+  },
+  "hidden": true
+}

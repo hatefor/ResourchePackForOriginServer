@@ -1,0 +1,22 @@
+{
+  "type": "apoli:action_over_time",
+  "interval": 20,
+  "entity_action": {
+    "type": "apoli:apply_effect",
+    "effect": {
+      "effect": "minecraft:weakness",
+      "duration": 60,
+      "amplifier": 1,
+      "is_ambient": true,
+      "show_particles": false,
+      "show_icon": true
+    }
+  },
+  "condition": {
+    "type": "origins:brightness",
+    "comparison": ">=",
+    "compare_to": 0.333
+  },
+  "name": "Light Sensitivity",
+  "description": "In bright light, your body weakens."
+}

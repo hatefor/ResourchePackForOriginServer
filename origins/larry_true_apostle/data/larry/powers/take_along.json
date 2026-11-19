@@ -1,0 +1,32 @@
+{
+  "type": "origins:active_self",
+  "name": "Take Along",
+  "description": "Drag EVERYTHING within 16 blocks into the realm with you: other players (as guests), mobs, pets, dropped items, boats and minecarts. Leaving with Private Realm brings your non-player companions back out. Sneak + secondary ability key while outside the realm. 20 second cooldown.",
+  "cooldown": 400,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 6
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking"
+      },
+      {
+        "type": "origins:dimension",
+        "dimension": "larry:realm",
+        "inverted": true
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function larry:take_along"
+  }
+}

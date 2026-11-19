@@ -1,0 +1,10 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 40,
+  "entity_action": {
+    "type": "origins:change_resource",
+    "resource": "kittyknight:storm_charge",
+    "change": 1
+  },
+  "hidden": true
+}

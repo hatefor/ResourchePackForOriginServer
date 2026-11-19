@@ -1,0 +1,6 @@
+{
+  "type": "origins:night_vision",
+  "name": "Luminous Sight",
+  "description": "You see perfectly in the dark.",
+  "strength": 1.0
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Vile Thieving Bird",
+  "description": "A vile little bird that steals everything: pockets, hunger, distance, even fate. No village will trade with it and golems hunt it down.",
+  "icon": {
+    "item": "minecraft:feather"
+  },
+  "order": 11,
+  "impact": 3,
+  "powers": [
+    "thieving_bird:pick_their_pockets",
+    "thieving_bird:steal_hunger",
+    "thieving_bird:steal_distance",
+    "thieving_bird:wing_flap",
+    "thieving_bird:wing_surge_tick",
+    "thieving_bird:wing_surge",
+    "thieving_bird:steal_killing_intent",
+    "thieving_bird:steal_fate",
+    "thieving_bird:intent_guard",
+    "thieving_bird:featherlight",
+    "thieving_bird:swift_wings",
+    "thieving_bird:natural_wings",
+    "thieving_bird:hardy_feathers",
+    "thieving_bird:hoard",
+    "thieving_bird:feed_stolen",
+    "thieving_bird:no_trading",
+    "thieving_bird:public_enemy",
+    "thieving_bird:no_armor",
+    "thieving_bird:no_shield"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 8,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "particle minecraft:item_slime ~ ~0.3 ~ 0.25 0.2 0.25 0 1"
+  },
+  "hidden": true
+}

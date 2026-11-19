@@ -1,0 +1,32 @@
+{
+  "type": "origins:damage_over_time",
+  "name": "Suffocation",
+  "description": "Dried out, you slowly suffocate.",
+  "interval": 30,
+  "onset_delay": 40,
+  "damage": 1,
+  "damage_easy": 1,
+  "damage_source": {
+    "name": "dehydration",
+    "bypasses_armor": true,
+    "unblockable": true
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:resource",
+        "resource": "deepborn:deepborn_moisture",
+        "comparison": "<=",
+        "compare_to": 0
+      },
+      {
+        "type": "origins:fluid_height",
+        "fluid": "minecraft:water",
+        "comparison": ">",
+        "compare_to": 0.0,
+        "inverted": true
+      }
+    ]
+  }
+}

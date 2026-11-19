@@ -1,0 +1,10 @@
+{
+  "type": "apoli:attribute",
+  "name": "Übermenschliche Stärke",
+  "description": "Deine Schläge treffen härter als die anderer.",
+  "modifier": {
+    "attribute": "minecraft:generic.attack_damage",
+    "operation": "addition",
+    "value": 2.0
+  }
+}

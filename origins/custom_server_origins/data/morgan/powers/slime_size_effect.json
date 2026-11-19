@@ -1,0 +1,10 @@
+{
+	"type": "apoli:action_over_time",
+	"interval": 20,
+	"entity_action": {
+		"type": "apoli:execute_command",
+		"command": "scale set pehkui:base 0.75 @s"
+	},
+	"name": "Small Body",
+	"description": "You are 25% smaller than normal."
+}

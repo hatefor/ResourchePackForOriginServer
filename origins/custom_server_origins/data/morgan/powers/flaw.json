@@ -1,0 +1,9 @@
+{
+	"type": "apoli:modify_damage_dealt",
+	"modifier": {
+		"operation": "addition",
+		"value": 4.5
+	},
+	"name": "Paper Cut",
+	"description": "Your skin cuts anything it touches. Your attacks deal extra damage."
+}

@@ -1,0 +1,66 @@
+{
+  "type": "apoli:active_self",
+  "name": "Pounce",
+  "description": "Shifted, primary: leap at your prey.",
+  "condition": {
+    "type": "apoli:and",
+    "conditions": [
+      {
+        "type": "apoli:resource",
+        "resource": "werewolf:wolf_form_shifted",
+        "comparison": ">=",
+        "compare_to": 1
+      },
+      {
+        "type": "apoli:sneaking",
+        "inverted": true
+      }
+    ]
+  },
+  "cooldown": 60,
+  "hud_render": {
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 0,
+    "should_render": false
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:add_velocity",
+        "space": "local_horizontal",
+        "z": 1.4
+      },
+      {
+        "type": "apoli:add_velocity",
+        "space": "world",
+        "y": 0.5
+      },
+      {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.wolf.growl",
+        "volume": 0.9,
+        "pitch": 1.2
+      },
+      {
+        "type": "apoli:spawn_particles",
+        "particle": {
+          "type": "minecraft:crit",
+          "params": ""
+        },
+        "count": 10,
+        "speed": 0.2,
+        "spread": {
+          "x": 0.3,
+          "y": 0.2,
+          "z": 0.3
+        },
+        "offset_y": 0.3
+      }
+    ]
+  }
+}

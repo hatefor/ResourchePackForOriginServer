@@ -1,0 +1,118 @@
+{
+  "type": "apoli:active_self",
+  "name": "Soul Siphon",
+  "description": "Sneak + primary, 3 souls (only spent on a hit): tear the life out of a living target up to 12 blocks away, dealing 6 damage and healing you for 6. The undead have nothing to give.",
+  "condition": {
+    "type": "apoli:and",
+    "conditions": [
+      {
+        "type": "apoli:sneaking"
+      },
+      {
+        "type": "apoli:resource",
+        "resource": "lich:soul_harvest_souls",
+        "comparison": ">=",
+        "compare_to": 3
+      }
+    ]
+  },
+  "cooldown": 200,
+  "hud_render": {
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 0
+  },
+  "key": {
+    "key": "key.origins.primary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "apoli:and",
+    "actions": [
+      {
+        "type": "apoli:play_sound",
+        "sound": "minecraft:entity.evoker.cast_spell",
+        "volume": 0.8,
+        "pitch": 0.6
+      },
+      {
+        "type": "apoli:raycast",
+        "distance": 12,
+        "shape_type": "collider",
+        "fluid_handling": "none",
+        "block": true,
+        "entity": true,
+        "command_along_ray": "particle minecraft:sculk_soul ~ ~ ~ 0.02 0.02 0.02 0.01 2 force",
+        "command_step": 1,
+        "command_along_ray_only_on_hit": false,
+        "bientity_action": {
+          "type": "apoli:and",
+          "actions": [
+            {
+              "type": "apoli:damage",
+              "amount": 6.0,
+              "damage_type": "minecraft:indirect_magic"
+            },
+            {
+              "type": "apoli:actor_action",
+              "action": {
+                "type": "apoli:and",
+                "actions": [
+                  {
+                    "type": "apoli:heal",
+                    "amount": 6.0
+                  },
+                  {
+                    "type": "apoli:change_resource",
+                    "resource": "lich:soul_harvest_souls",
+                    "change": -3,
+                    "operation": "add"
+                  },
+                  {
+                    "type": "apoli:spawn_particles",
+                    "particle": {
+                      "type": "minecraft:soul",
+                      "params": ""
+                    },
+                    "count": 12,
+                    "speed": 0.02,
+                    "spread": {
+                      "x": 0.3,
+                      "y": 0.6,
+                      "z": 0.3
+                    },
+                    "offset_y": 1.0
+                  },
+                  {
+                    "type": "apoli:play_sound",
+                    "sound": "minecraft:particle.soul_escape",
+                    "volume": 1.0,
+                    "pitch": 0.7
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "bientity_condition": {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:living"
+              }
+            },
+            {
+              "type": "apoli:target_condition",
+              "condition": {
+                "type": "apoli:entity_group",
+                "group": "undead"
+              },
+              "inverted": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

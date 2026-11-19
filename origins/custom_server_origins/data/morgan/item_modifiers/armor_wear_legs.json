@@ -1,0 +1,122 @@
+[
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.12,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:leather_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.04,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:chainmail_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.04,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:iron_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.085714,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:golden_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.018182,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:diamond_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	},
+	{
+		"function": "minecraft:set_damage",
+		"damage": -0.016216,
+		"add": true,
+		"conditions": [
+			{
+				"condition": "minecraft:entity_properties",
+				"entity": "this",
+				"predicate": {
+					"equipment": {
+						"legs": {
+							"items": [
+								"minecraft:netherite_leggings"
+							]
+						}
+					}
+				}
+			}
+		]
+	}
+]

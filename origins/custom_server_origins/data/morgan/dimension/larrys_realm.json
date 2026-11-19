@@ -1,0 +1,22 @@
+{
+	"type": "morgan:larrys_realm",
+	"generator": {
+		"type": "minecraft:flat",
+		"settings": {
+			"biome": "morgan:larrys_realm",
+			"lakes": false,
+			"features": true,
+			"structure_overrides": [],
+			"layers": [
+				{
+					"block": "minecraft:bedrock",
+					"height": 1
+				},
+				{
+					"block": "minecraft:blackstone",
+					"height": 16
+				}
+			]
+		}
+	}
+}

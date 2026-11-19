@@ -1,0 +1,7 @@
+{
+	"type": "apoli:modify_player_spawn",
+	"dimension": "morgan:larrys_realm",
+	"spawn_strategy": "center",
+	"name": "Born of the Realm",
+	"description": "You spawn in Larry's realm instead of the overworld."
+}

@@ -1,0 +1,19 @@
+{
+  "type": "origins:active_self",
+  "name": "Solar Flare",
+  "description": "Primary ability key: detonate a sun-bright flare. Every creature within 16 blocks takes 24 hearts of armor-piercing damage, is set ablaze, blinded for 8 seconds and flung skyward. 15 second cooldown.",
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "cooldown": 300,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 2
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "function justaddon:solar_flare",
+    "permission_level": 4
+  }
+}

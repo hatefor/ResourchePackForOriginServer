@@ -1,0 +1,43 @@
+{
+  "type": "origins:multiple",
+  "name": "Dewy Skin",
+  "description": "Water is your element. While submerged you regenerate steadily and swim like a dolphin.",
+  "regen": {
+    "type": "origins:action_over_time",
+    "condition": {
+      "type": "origins:submerged_in",
+      "fluid": "minecraft:water"
+    },
+    "interval": 20,
+    "entity_action": {
+      "type": "origins:apply_effect",
+      "effect": {
+        "effect": "minecraft:regeneration",
+        "amplifier": 0,
+        "is_ambient": true,
+        "show_particles": false,
+        "show_icon": false,
+        "duration": 50
+      }
+    }
+  },
+  "grace": {
+    "type": "origins:action_over_time",
+    "condition": {
+      "type": "origins:submerged_in",
+      "fluid": "minecraft:water"
+    },
+    "interval": 20,
+    "entity_action": {
+      "type": "origins:apply_effect",
+      "effect": {
+        "effect": "minecraft:dolphins_grace",
+        "amplifier": 0,
+        "is_ambient": true,
+        "show_particles": false,
+        "show_icon": false,
+        "duration": 50
+      }
+    }
+  }
+}

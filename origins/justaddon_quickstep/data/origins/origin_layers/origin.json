@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "origins": [
+    "justaddon:quickstep",
+    "justaddon:quickstep_awakened",
+    "justaddon:being_of_light"
+  ]
+}

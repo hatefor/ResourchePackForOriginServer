@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Light Strikes",
+  "description": "Your attacks recharge 60% faster.",
+  "modifier": {
+    "attribute": "minecraft:generic.attack_speed",
+    "operation": "multiply_base",
+    "value": 0.6
+  }
+}

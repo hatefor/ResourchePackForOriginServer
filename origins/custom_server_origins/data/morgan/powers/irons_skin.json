@@ -1,0 +1,11 @@
+{
+	"type": "apoli:attribute",
+	"modifier": {
+		"name": "Irons Skin",
+		"attribute": "minecraft:generic.armor",
+		"operation": "addition",
+		"value": 15
+	},
+	"name": "Irons Skin",
+	"description": "Your skin is as tough as a full set of iron armor."
+}

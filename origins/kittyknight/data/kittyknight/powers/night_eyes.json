@@ -1,0 +1,6 @@
+{
+  "type": "origins:night_vision",
+  "name": "Cat Eyes",
+  "description": "You see well in the dark.",
+  "strength": 0.6
+}

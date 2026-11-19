@@ -1,0 +1,20 @@
+{
+  "name": "Sun Wukong",
+  "description": "Der Affenkönig, geboren aus einem Stein, Rebell des Himmels und Träger des Ruyi Jingu Bang. Flink, stark und voller Tricks – aber auch zerbrechlicher als er aussieht.",
+  "icon": {
+    "item": "minecraft:blaze_rod"
+  },
+  "impact": 2,
+  "order": 10,
+  "powers": [
+    "wukong:monkey_agility",
+    "wukong:staff_strength",
+    "wukong:flying_nimbus",
+    "wukong:seventy_two_transformations",
+    "wukong:golden_eyes",
+    "wukong:furnace_tempered",
+    "wukong:peach_of_immortality",
+    "wukong:starting_staff",
+    "wukong:mischievous_frailty"
+  ]
+}

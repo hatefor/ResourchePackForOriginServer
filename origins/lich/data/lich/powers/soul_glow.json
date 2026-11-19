@@ -1,0 +1,16 @@
+{
+  "type": "apoli:particle",
+  "particle": {
+    "type": "minecraft:soul",
+    "params": ""
+  },
+  "frequency": 40,
+  "visible_in_first_person": false,
+  "condition": {
+    "type": "apoli:resource",
+    "resource": "lich:soul_harvest_souls",
+    "comparison": ">=",
+    "compare_to": 10
+  },
+  "hidden": true
+}

@@ -1,0 +1,9 @@
+{
+	"type": "apoli:model_color",
+	"red": 0.4,
+	"green": 1.0,
+	"blue": 0.4,
+	"alpha": 0.85,
+	"name": "Slime Skin",
+	"description": "Your body is a translucent, gooey green."
+}

@@ -1,0 +1,72 @@
+{
+  "type": "apoli:active_self",
+  "name": "Chaotic Chains",
+  "description": "[Primary key] Everything within 10 blocks (except you) is stunned for 5 seconds: no moving, no using items, no attacking, and their camera spins wildly.",
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "cooldown": 600,
+  "hud_render": {
+    "should_render": true
+  },
+  "entity_action": {
+    "type": "apoli:area_of_effect",
+    "radius": 10,
+    "shape": "sphere",
+    "include_target": false,
+    "bientity_action": {
+      "type": "apoli:target_action",
+      "action": {
+        "type": "apoli:and",
+        "actions": [
+          {
+            "type": "apoli:grant_power",
+            "power": "chaotic:stun_no_item_use",
+            "source": "chaotic:chaotic_chains"
+          },
+          {
+            "type": "apoli:grant_power",
+            "power": "chaotic:stun_no_block_use",
+            "source": "chaotic:chaotic_chains"
+          },
+          {
+            "type": "apoli:grant_power",
+            "power": "chaotic:stun_no_entity_use",
+            "source": "chaotic:chaotic_chains"
+          },
+          {
+            "type": "apoli:grant_power",
+            "power": "chaotic:stun_no_damage",
+            "source": "chaotic:chaotic_chains"
+          },
+          {
+            "type": "apoli:grant_power",
+            "power": "chaotic:stun_spin",
+            "source": "chaotic:chaotic_chains"
+          },
+          {
+            "type": "apoli:apply_effect",
+            "effects": [
+              {
+                "effect": "minecraft:slowness",
+                "duration": 100,
+                "amplifier": 6,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              },
+              {
+                "effect": "minecraft:mining_fatigue",
+                "duration": 100,
+                "amplifier": 10,
+                "is_ambient": false,
+                "show_particles": true,
+                "show_icon": true
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

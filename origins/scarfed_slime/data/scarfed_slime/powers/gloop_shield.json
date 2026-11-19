@@ -1,0 +1,39 @@
+{
+  "type": "origins:active_self",
+  "name": "Gloop Shield",
+  "description": "Coat yourself in a thick layer of goo: 3 extra absorption hearts and Resistance I for 8 seconds. Press your secondary ability key. 25 second cooldown.",
+  "cooldown": 500,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 1
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:apply_effect",
+        "effects": [
+          {
+            "effect": "minecraft:absorption",
+            "duration": 160,
+            "amplifier": 2
+          },
+          {
+            "effect": "minecraft:resistance",
+            "duration": 160,
+            "amplifier": 0
+          }
+        ]
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "function scarfed_slime:shield"
+      }
+    ]
+  }
+}

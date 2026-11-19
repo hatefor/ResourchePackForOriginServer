@@ -1,0 +1,32 @@
+execute if score #idx tb_tmp matches 0 run scoreboard players add @s tb_b0 1
+execute if score #idx tb_tmp matches 1 run scoreboard players add @s tb_b1 1
+execute if score #idx tb_tmp matches 2 run scoreboard players add @s tb_b2 1
+execute if score #idx tb_tmp matches 3 run scoreboard players add @s tb_b3 1
+execute if score #idx tb_tmp matches 4 run scoreboard players add @s tb_b4 1
+execute if score #idx tb_tmp matches 5 run scoreboard players add @s tb_b5 1
+execute if score #idx tb_tmp matches 6 run scoreboard players add @s tb_b6 1
+execute if score #idx tb_tmp matches 7 run scoreboard players add @s tb_b7 1
+execute if score #idx tb_tmp matches 8 run scoreboard players add @s tb_b8 1
+execute if score #idx tb_tmp matches 9 run scoreboard players add @s tb_b9 1
+execute if score #idx tb_tmp matches 10 run scoreboard players add @s tb_b10 1
+execute if score #idx tb_tmp matches 11 run scoreboard players add @s tb_b11 1
+execute if score #idx tb_tmp matches 12 run scoreboard players add @s tb_b12 1
+execute if score #idx tb_tmp matches 13 run scoreboard players add @s tb_b13 1
+execute if score #idx tb_tmp matches 14 run scoreboard players add @s tb_b14 1
+execute if score #idx tb_tmp matches 15 run scoreboard players add @s tb_b15 1
+execute if score #idx tb_tmp matches 16 run scoreboard players add @s tb_b16 1
+execute if score #idx tb_tmp matches 17 run scoreboard players add @s tb_b17 1
+execute if score #idx tb_tmp matches 18 run scoreboard players add @s tb_b18 1
+execute if score #idx tb_tmp matches 19 run scoreboard players add @s tb_b19 1
+execute if score #idx tb_tmp matches 20 run scoreboard players add @s tb_b20 1
+execute if score #idx tb_tmp matches 21 run scoreboard players add @s tb_b21 1
+execute if score #idx tb_tmp matches 22 run scoreboard players add @s tb_b22 1
+execute if score #idx tb_tmp matches 23 run scoreboard players add @s tb_b23 1
+execute if score #idx tb_tmp matches 24 run scoreboard players add @s tb_b24 1
+execute if score #idx tb_tmp matches 25 run scoreboard players add @s tb_b25 1
+execute if score #idx tb_tmp matches 26 run scoreboard players add @s tb_b26 1
+execute if score #idx tb_tmp matches 27 run scoreboard players add @s tb_b27 1
+execute if score #idx tb_tmp matches 28 run scoreboard players add @s tb_b28 1
+execute if score #idx tb_tmp matches 29 run scoreboard players add @s tb_b29 1
+function thieving_bird:hoard_calc
+title @s actionbar [{"text":"Stolen! Hoard: ","color":"gold","bold":true},{"score":{"name":"@s","objective":"tb_hoard"},"color":"yellow","bold":true},{"text":"/30","color":"gold"}]

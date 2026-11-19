@@ -1,0 +1,9 @@
+{
+	"type": "apoli:modify_damage_dealt",
+	"modifier": {
+		"operation": "addition",
+		"value": 5
+	},
+	"name": "Herald's Fury",
+	"description": "Your attacks deal 5 extra damage."
+}

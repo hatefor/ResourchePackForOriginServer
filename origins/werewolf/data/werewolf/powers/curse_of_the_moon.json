@@ -1,0 +1,261 @@
+{
+  "type": "apoli:multiple",
+  "name": "Curse of the Moon",
+  "description": "The moon rules you. On a full moon night you're forced to shift, rage stays full, you hit harder and run faster, and you can't change back until dawn. On a new moon night the beast sleeps: you can't shift, rage drains away fast, and you're weaker with 2 fewer hearts.",
+  "forced": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:predicate",
+              "predicate": "werewolf:full_moon"
+            }
+          ]
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1,
+          "inverted": true
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "change": 1,
+          "operation": "set"
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:the_beast_within_rage",
+          "change": 20,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wolf.howl",
+          "volume": 1.0,
+          "pitch": 0.8
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.wolf.growl",
+          "volume": 1.0,
+          "pitch": 0.6
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:large_smoke",
+            "params": ""
+          },
+          "count": 30,
+          "speed": 0.04,
+          "spread": {
+            "x": 0.5,
+            "y": 0.9,
+            "z": 0.5
+          },
+          "offset_y": 0.9
+        },
+        {
+          "type": "apoli:spawn_particles",
+          "particle": {
+            "type": "minecraft:crit",
+            "params": ""
+          },
+          "count": 25,
+          "speed": 0.3,
+          "spread": {
+            "x": 0.5,
+            "y": 0.9,
+            "z": 0.5
+          },
+          "offset_y": 0.9
+        }
+      ]
+    }
+  },
+  "feast": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:dimension",
+          "dimension": "minecraft:overworld"
+        },
+        {
+          "type": "apoli:predicate",
+          "predicate": "werewolf:full_moon"
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "werewolf:the_beast_within_rage",
+      "change": 3,
+      "operation": "add"
+    }
+  },
+  "frenzy": {
+    "type": "apoli:conditioned_attribute",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:and",
+          "conditions": [
+            {
+              "type": "apoli:dimension",
+              "dimension": "minecraft:overworld"
+            },
+            {
+              "type": "apoli:predicate",
+              "predicate": "werewolf:full_moon"
+            }
+          ]
+        },
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1
+        }
+      ]
+    },
+    "tick_rate": 10,
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.attack_damage",
+        "operation": "addition",
+        "value": 3.0,
+        "name": "Full moon frenzy"
+      },
+      {
+        "attribute": "minecraft:generic.movement_speed",
+        "operation": "multiply_total",
+        "value": 0.1,
+        "name": "Full moon run"
+      }
+    ]
+  },
+  "dark_moon": {
+    "type": "apoli:conditioned_attribute",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:dimension",
+          "dimension": "minecraft:overworld"
+        },
+        {
+          "type": "apoli:predicate",
+          "predicate": "werewolf:new_moon"
+        }
+      ]
+    },
+    "tick_rate": 20,
+    "modifiers": [
+      {
+        "attribute": "minecraft:generic.max_health",
+        "operation": "addition",
+        "value": -4.0,
+        "name": "The beast sleeps"
+      },
+      {
+        "attribute": "minecraft:generic.attack_damage",
+        "operation": "multiply_total",
+        "value": -0.2,
+        "name": "The beast sleeps"
+      }
+    ]
+  },
+  "locked_away": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:dimension",
+          "dimension": "minecraft:overworld"
+        },
+        {
+          "type": "apoli:predicate",
+          "predicate": "werewolf:new_moon"
+        }
+      ]
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:the_beast_within_rage",
+          "change": -5,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:if_else",
+          "condition": {
+            "type": "apoli:resource",
+            "resource": "werewolf:wolf_form_shifted",
+            "comparison": ">=",
+            "compare_to": 1
+          },
+          "if_action": {
+            "type": "apoli:and",
+            "actions": [
+              {
+                "type": "apoli:change_resource",
+                "resource": "werewolf:wolf_form_shifted",
+                "change": 0,
+                "operation": "set"
+              },
+              {
+                "type": "apoli:play_sound",
+                "sound": "minecraft:entity.wolf.whine",
+                "volume": 0.8,
+                "pitch": 0.9
+              },
+              {
+                "type": "apoli:spawn_particles",
+                "particle": {
+                  "type": "minecraft:cloud",
+                  "params": ""
+                },
+                "count": 20,
+                "speed": 0.03,
+                "spread": {
+                  "x": 0.5,
+                  "y": 0.9,
+                  "z": 0.5
+                },
+                "offset_y": 0.9
+              }
+            ]
+          },
+          "else_action": {
+            "type": "apoli:nothing"
+          }
+        }
+      ]
+    }
+  }
+}

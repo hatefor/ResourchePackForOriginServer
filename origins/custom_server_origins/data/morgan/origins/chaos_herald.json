@@ -1,0 +1,14 @@
+{
+	"powers": [
+		"morgan:chaos_hp",
+		"morgan:chaos_damage",
+		"morgan:chaos_boon",
+		"morgan:chaos_fireball",
+		"morgan:chaos_hit"
+	],
+	"icon": "minecraft:firework_star",
+	"order": 12,
+	"impact": 3,
+	"name": "Chaos Herald",
+	"description": "A fragile harbinger of chaos who hits like a truck and spreads random effects."
+}

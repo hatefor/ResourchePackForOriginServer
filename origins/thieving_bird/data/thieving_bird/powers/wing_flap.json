@@ -1,0 +1,44 @@
+{
+  "type": "origins:active_self",
+  "name": "Wing Flap",
+  "description": "Press Secondary to flap skyward. Mid-glide, flap to surge forward like a rocket.",
+  "cooldown": 40,
+  "hud_render": {
+    "should_render": true,
+    "sprite_location": "origins:textures/gui/resource_bar.png",
+    "bar_index": 6
+  },
+  "key": {
+    "key": "key.origins.secondary_active",
+    "continuous": false
+  },
+  "condition": {
+    "type": "origins:and",
+    "conditions": [
+      {
+        "type": "origins:sneaking",
+        "inverted": true
+      },
+      {
+        "type": "origins:fall_flying",
+        "inverted": true
+      }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:add_velocity",
+        "x": 0.0,
+        "y": 1.0,
+        "z": 0.0,
+        "space": "world"
+      },
+      {
+        "type": "origins:play_sound",
+        "sound": "minecraft:entity.parrot.fly"
+      }
+    ]
+  }
+}

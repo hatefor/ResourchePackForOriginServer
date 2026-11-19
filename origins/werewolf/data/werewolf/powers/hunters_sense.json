@@ -1,0 +1,110 @@
+{
+  "type": "apoli:multiple",
+  "name": "Hunter's Sense",
+  "description": "Human, primary: sniff the air. For 10 seconds every living thing within 32 blocks glows for you, even through walls. Adds 5 rage.",
+  "timer": {
+    "type": "apoli:resource",
+    "min": 0,
+    "max": 10,
+    "start_value": 0,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 0,
+      "should_render": false
+    }
+  },
+  "sniff": {
+    "type": "apoli:active_self",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:resource",
+          "resource": "werewolf:wolf_form_shifted",
+          "comparison": ">=",
+          "compare_to": 1,
+          "inverted": true
+        },
+        {
+          "type": "apoli:sneaking",
+          "inverted": true
+        }
+      ]
+    },
+    "cooldown": 600,
+    "hud_render": {
+      "sprite_location": "origins:textures/gui/resource_bar.png",
+      "bar_index": 8
+    },
+    "key": {
+      "key": "key.origins.primary_active",
+      "continuous": false
+    },
+    "entity_action": {
+      "type": "apoli:and",
+      "actions": [
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:hunters_sense_timer",
+          "change": 10,
+          "operation": "set"
+        },
+        {
+          "type": "apoli:change_resource",
+          "resource": "werewolf:the_beast_within_rage",
+          "change": 5,
+          "operation": "add"
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.fox.sniff",
+          "volume": 1.0,
+          "pitch": 0.7
+        },
+        {
+          "type": "apoli:play_sound",
+          "sound": "minecraft:entity.fox.sniff",
+          "volume": 1.0,
+          "pitch": 0.9
+        }
+      ]
+    }
+  },
+  "fade": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:hunters_sense_timer",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "entity_action": {
+      "type": "apoli:change_resource",
+      "resource": "werewolf:hunters_sense_timer",
+      "change": -1,
+      "operation": "add"
+    }
+  },
+  "trail": {
+    "type": "apoli:entity_glow",
+    "condition": {
+      "type": "apoli:resource",
+      "resource": "werewolf:hunters_sense_timer",
+      "comparison": ">",
+      "compare_to": 0
+    },
+    "use_teams": false,
+    "red": 1.0,
+    "green": 0.75,
+    "blue": 0.2,
+    "entity_condition": {
+      "type": "apoli:living"
+    },
+    "bientity_condition": {
+      "type": "apoli:distance",
+      "comparison": "<=",
+      "compare_to": 32
+    }
+  }
+}

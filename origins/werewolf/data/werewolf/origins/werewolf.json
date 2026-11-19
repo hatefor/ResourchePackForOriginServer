@@ -1,0 +1,21 @@
+{
+  "name": "Werewolf",
+  "description": "Cursed with the blood of the wolf. By day you pass for human, but rage and the moon pull the beast out of you: claws, speed and a hunter's nose, at the cost of your armor, your welcome and, on a full moon, your choice.",
+  "icon": {
+    "item": "minecraft:wolf_spawn_egg"
+  },
+  "impact": 3,
+  "order": 103,
+  "powers": [
+    "werewolf:the_beast_within",
+    "werewolf:wolf_form",
+    "werewolf:pounce",
+    "werewolf:howl",
+    "werewolf:hunters_sense",
+    "werewolf:pack_leader",
+    "werewolf:curse_of_the_moon",
+    "werewolf:the_beasts_price",
+    "werewolf:restless",
+    "werewolf:carnivore"
+  ]
+}

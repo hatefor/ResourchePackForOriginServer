@@ -1,0 +1,6 @@
+{
+  "type": "origins:modify_falling",
+  "name": "Feline Landing",
+  "description": "Cats land on their feet. You take no fall damage.",
+  "take_fall_damage": false
+}

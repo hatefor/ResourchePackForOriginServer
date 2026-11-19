@@ -1,0 +1,13 @@
+{
+  "type": "origins:action_when_damage_taken",
+  "damage_condition": {
+    "type": "origins:name",
+    "name": "lightningBolt"
+  },
+  "entity_action": {
+    "type": "origins:change_resource",
+    "resource": "kittyknight:storm_charge",
+    "change": 60
+  },
+  "hidden": true
+}

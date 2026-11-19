@@ -1,0 +1,78 @@
+{
+  "type": "apoli:multiple",
+  "name": "Flugwolke (Jindou Yun)",
+  "description": "Rufe die Salto-Wolke und fliege auf ihr wie Sun Wukong. Primärfähigkeit-Taste zum Ein- und Ausschalten. Das Fliegen kostet etwas Hunger.",
+  "toggle": {
+    "type": "apoli:toggle",
+    "active_by_default": false,
+    "retain_state": false,
+    "key": {
+      "key": "key.origins.primary_active",
+      "continuous": false
+    }
+  },
+  "flight": {
+    "type": "apoli:creative_flight",
+    "condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:power_active",
+          "power": "wukong:flying_nimbus_toggle"
+        },
+        {
+          "type": "apoli:submerged_in",
+          "fluid": "minecraft:water",
+          "inverted": true
+        }
+      ]
+    }
+  },
+  "cloud_trail": {
+    "type": "apoli:action_over_time",
+    "interval": 2,
+    "entity_action": {
+      "type": "apoli:if_else",
+      "condition": {
+        "type": "apoli:power_active",
+        "power": "wukong:flying_nimbus_toggle"
+      },
+      "if_action": {
+        "type": "apoli:and",
+        "actions": [
+          {
+            "type": "apoli:spawn_particles",
+            "particle": { "type": "minecraft:cloud" },
+            "count": 10,
+            "speed": 0.0,
+            "force": true,
+            "spread": { "x": 0.45, "y": 0.03, "z": 0.45 }
+          },
+          {
+            "type": "apoli:spawn_particles",
+            "particle": { "type": "minecraft:end_rod" },
+            "count": 1,
+            "speed": 0.01,
+            "force": true,
+            "spread": { "x": 0.4, "y": 0.05, "z": 0.4 }
+          }
+        ]
+      }
+    }
+  },
+  "upkeep": {
+    "type": "apoli:action_over_time",
+    "interval": 20,
+    "entity_action": {
+      "type": "apoli:if_else",
+      "condition": {
+        "type": "apoli:power_active",
+        "power": "wukong:flying_nimbus_toggle"
+      },
+      "if_action": {
+        "type": "apoli:exhaust",
+        "amount": 0.4
+      }
+    }
+  }
+}

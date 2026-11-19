@@ -1,0 +1,13 @@
+{
+  "type": "apoli:starting_equipment",
+  "name": "Ruyi Jingu Bang",
+  "description": "Du startest mit dem legendären Stab, der nach Belieben wächst und schrumpft.",
+  "hidden": false,
+  "stacks": [
+    {
+      "item": "minecraft:stick",
+      "amount": 1,
+      "tag": "{display:{Name:'{\"text\":\"Ruyi Jingu Bang\",\"color\":\"gold\",\"italic\":false}',Lore:['{\"text\":\"Der Wunschgemäße Goldreif-Stab\",\"color\":\"yellow\",\"italic\":true}']},Enchantments:[{id:\"minecraft:sharpness\",lvl:3},{id:\"minecraft:knockback\",lvl:2},{id:\"minecraft:unbreaking\",lvl:3}]}"
+    }
+  ]
+}

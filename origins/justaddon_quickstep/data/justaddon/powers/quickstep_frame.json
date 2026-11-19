@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "name": "Light Frame",
+  "description": "Built for speed, not durability: you have two fewer hearts.",
+  "modifier": {
+    "attribute": "minecraft:generic.max_health",
+    "operation": "addition",
+    "value": -4
+  }
+}

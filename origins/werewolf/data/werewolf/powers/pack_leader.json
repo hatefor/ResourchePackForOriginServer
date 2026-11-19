@@ -1,0 +1,56 @@
+{
+  "type": "apoli:action_over_time",
+  "name": "Pack Leader",
+  "description": "While you're shifted, your tamed wolves within 16 blocks fight beside you with Strength and Resistance.",
+  "interval": 100,
+  "condition": {
+    "type": "apoli:resource",
+    "resource": "werewolf:wolf_form_shifted",
+    "comparison": ">=",
+    "compare_to": 1
+  },
+  "entity_action": {
+    "type": "apoli:area_of_effect",
+    "radius": 16,
+    "shape": "sphere",
+    "bientity_condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:owner"
+        },
+        {
+          "type": "apoli:target_condition",
+          "condition": {
+            "type": "apoli:entity_type",
+            "entity_type": "minecraft:wolf"
+          }
+        }
+      ]
+    },
+    "bientity_action": {
+      "type": "apoli:target_action",
+      "action": {
+        "type": "apoli:apply_effect",
+        "effects": [
+          {
+            "effect": "minecraft:strength",
+            "duration": 120,
+            "amplifier": 0,
+            "is_ambient": false,
+            "show_particles": false,
+            "show_icon": true
+          },
+          {
+            "effect": "minecraft:resistance",
+            "duration": 120,
+            "amplifier": 0,
+            "is_ambient": false,
+            "show_particles": false,
+            "show_icon": true
+          }
+        ]
+      }
+    }
+  }
+}

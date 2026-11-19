@@ -1,0 +1,54 @@
+{
+  "type": "apoli:multiple",
+  "name": "Carnivore",
+  "description": "You can only eat meat (golden apples aside), but meat fills you 50% more and raw or rotten meat never makes you sick.",
+  "diet": {
+    "type": "apoli:prevent_item_use",
+    "item_condition": {
+      "type": "apoli:and",
+      "conditions": [
+        {
+          "type": "apoli:food"
+        },
+        {
+          "type": "apoli:meat",
+          "inverted": true
+        },
+        {
+          "type": "apoli:ingredient",
+          "ingredient": [
+            {
+              "item": "minecraft:golden_apple"
+            },
+            {
+              "item": "minecraft:enchanted_golden_apple"
+            }
+          ],
+          "inverted": true
+        }
+      ]
+    }
+  },
+  "hearty": {
+    "type": "apoli:modify_food",
+    "item_condition": {
+      "type": "apoli:meat"
+    },
+    "food_modifier": {
+      "name": "Werewolf appetite",
+      "operation": "multiply_total",
+      "value": 0.5
+    },
+    "saturation_modifier": {
+      "name": "Werewolf appetite",
+      "operation": "multiply_total",
+      "value": 0.5
+    }
+  },
+  "iron_gut": {
+    "type": "apoli:effect_immunity",
+    "effects": [
+      "minecraft:hunger"
+    ]
+  }
+}

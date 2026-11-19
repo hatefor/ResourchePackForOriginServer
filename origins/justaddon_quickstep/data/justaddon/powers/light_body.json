@@ -1,0 +1,17 @@
+{
+  "type": "origins:attribute",
+  "name": "Radiant Body",
+  "description": "Your body is pure energy: +6 hearts of maximum health and +4 armor.",
+  "modifiers": [
+    {
+      "attribute": "minecraft:generic.max_health",
+      "operation": "addition",
+      "value": 12
+    },
+    {
+      "attribute": "minecraft:generic.armor",
+      "operation": "addition",
+      "value": 4
+    }
+  ]
+}

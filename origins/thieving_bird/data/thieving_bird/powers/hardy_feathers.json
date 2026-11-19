@@ -1,0 +1,35 @@
+{
+  "type": "origins:multiple",
+  "name": "Hardy Feathers",
+  "description": "Permanent Resistance I and Regeneration I.",
+  "res": {
+    "type": "origins:action_over_time",
+    "interval": 20,
+    "entity_action": {
+      "type": "origins:apply_effect",
+      "effect": {
+        "effect": "minecraft:resistance",
+        "amplifier": 0,
+        "is_ambient": true,
+        "show_particles": false,
+        "show_icon": false,
+        "duration": 50
+      }
+    }
+  },
+  "regen": {
+    "type": "origins:action_over_time",
+    "interval": 20,
+    "entity_action": {
+      "type": "origins:apply_effect",
+      "effect": {
+        "effect": "minecraft:regeneration",
+        "amplifier": 0,
+        "is_ambient": true,
+        "show_particles": false,
+        "show_icon": false,
+        "duration": 50
+      }
+    }
+  }
+}
