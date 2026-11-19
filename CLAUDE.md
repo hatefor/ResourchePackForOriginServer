@@ -298,8 +298,12 @@ already released is skipped, so script or doc changes publish nothing. The relea
   and an empty `resource-pack-sha1=`, the server never needs editing again: players fetch the newest pack (a
   few KB) on each join. Pin a tag and its SHA-1 instead for an exact, verified pack.
 - The resource pack zip stores its entries uncompressed so the same pack has the same SHA-1 here and in CI.
-- Server files (`kubejs/`, the datapack) are still copied to the server by hand; they are attached to each
-  release so they come from the same tested build.
+- The `deploy` job uploads the scripts and datapack to the WiseHosting server over SFTP after the tests pass
+  (`tools/deploy_sftp.py`; WiseHosting has no public API, SFTP is documented). It owns only
+  `kubejs/server_scripts/ordertest/`, `kubejs/server_scripts/origins/` and `<world>/datapacks/ordertest.zip`,
+  uploads only changed files, and skips without the `WISEHOSTING_SFTP_*` secrets (docs/SERVER.md lists them).
+  `/reload` on the server is still manual. Tested against a real local SFTP server: upload, no-op re-run, stale
+  cleanup, untouched neighbours, wrong host key and wrong password refused.
 - A failed test run uploads `.testserver/logs/` as an artifact.
 
 ## 7. Admin commands

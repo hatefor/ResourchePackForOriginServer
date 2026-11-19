@@ -52,6 +52,27 @@ release's notes; then you update both lines for each new release.
    `Domain expansion Photon Example`. A dome builds, a violet burst flies out, a curtain rises around the
    wall, and a gold implosion plays when it closes.
 
+## Automatic upload (WiseHosting)
+
+After every push to `main` that passes all tests, GitHub uploads the scripts and datapack to the server over SFTP
+(`tools/deploy_sftp.py`). It only writes and deletes inside `kubejs/server_scripts/ordertest/`,
+`kubejs/server_scripts/origins/` and `<world>/datapacks/ordertest.zip`; mods, worlds and everything else are never
+touched. Only changed files are uploaded. The changes take effect on `/reload` (or a restart).
+
+Set it up once, in the GitHub repository under **Settings > Secrets and variables > Actions**:
+
+| Name | Kind | Value |
+|---|---|---|
+| `WISEHOSTING_SFTP_HOST` | Secret | The address on the panel's **Files > SFTP** page, without `sftp://` or a port |
+| `WISEHOSTING_SFTP_PORT` | Secret | The port on that page (2022 if none is shown) |
+| `WISEHOSTING_SFTP_USER` | Secret | The username on that page |
+| `WISEHOSTING_SFTP_PASSWORD` | Secret | Your panel password (the SFTP password is the panel password) |
+| `WISEHOSTING_SFTP_HOST_KEY` | Secret | Recommended: the output of `ssh-keyscan -p <port> <host>` (one line). Without it the server's identity is not checked |
+| `SERVER_WORLD` | Variable | The world folder (`level-name` in `server.properties`), only if it is not `world` |
+
+Check it from your PC before relying on it (set the same values as environment variables first):
+`python tools/deploy_sftp.py --dry-run` connects and lists what would change without changing anything.
+
 ## Admin commands
 
 Need permission level 2 (operators).
