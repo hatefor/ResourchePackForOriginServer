@@ -194,7 +194,7 @@ from inside and, for the dome, from outside. The shot that verified the generate
 looping curtain, close implosion, one screenshot each):
 `.\gradlew.bat runClient -PquitAfter=26 "-PdevCommands=/domain closeall|/domain clear Dev|/domain register Dev Photon Example|/time set noon|/tp @s ~ ~ ~ 0 -10|Domain expansion Photon Example|!wait 6|!screenshot|!wait 50|!screenshot|/domain time @s 1|!wait 22|!screenshot"`.
 
-### Rules learned from VoidSpell (`C:\MinecraftMod\Shadows`, Photon for 26.x)
+### Rules learned from VoidSpell (a separate mod project on Photon for 26.x)
 
 VoidSpell ships hundreds of Photon effects and measured these the hard way. They were measured on its newer
 Photon; treat each as true here until a screenshot says otherwise.
