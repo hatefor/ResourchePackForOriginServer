@@ -29,6 +29,18 @@ component. Add a function to a tag in `data/ordertest/tags/functions/domain/`:
 
 Filter by name with `@s[tag=ot_in_<slug>]`, as `functions/examples/example_domain_tick.mcfunction` does.
 
+## Imported origins (origins/<name>/data/)
+
+| Trap | Rule |
+|---|---|
+| `origins:status_effect` as a power type | Does not exist in Apoli 2.9 (only as a condition). Use `action_over_time` + `apply_effect` |
+| `apoli:light_level` in an entity condition | Block condition only; entity is `origins:brightness` (light 10 in the overworld = 0.333) |
+| `origins:multiple` | Defines sub-powers `<id>_<key>`; other powers reference those ids (`validate` knows) |
+| `*:*_x` in a resource reference | Origins' wildcard for this power's own id |
+| A `cooldown` power used as a resource | Valid: Apoli resource actions and conditions accept it |
+| Exponent numbers in commands (`~1.67772e+07`) | Rejected by Minecraft; `validate` errors on them |
+| Two origins writing one file | Only tags and origin layers merge; anything else is an error by design |
+
 ## Traps
 
 | Trap | Rule |

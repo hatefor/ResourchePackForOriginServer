@@ -2,6 +2,7 @@
 
     python -m unittest discover -s tools -p "test_*.py" -v
 """
+import json
 import os
 import sys
 import tempfile
@@ -62,6 +63,23 @@ class PackSources(unittest.TestCase):
         self.write("origins/rival/data/ordertest/functions/shared.mcfunction", "say rival")
         with self.assertRaises(pack_sources.SourceConflict):
             pack_sources.datapack_files()
+
+    def test_shared_tags_from_several_origins_are_merged(self):
+        self.write("data/minecraft/tags/functions/load.json", '{"values": ["ordertest:load"]}')
+        self.write("origins/storm/data/minecraft/tags/functions/load.json", '{"values": ["storm:load"]}')
+        self.write("origins/rival/data/minecraft/tags/functions/load.json",
+                   '{"replace": false, "values": ["rival:load", "storm:load"]}')
+        merged = json.loads(pack_sources.datapack_files()["data/minecraft/tags/functions/load.json"])
+        # Shared data first, then origins in folder-name order (rival, storm); duplicates kept once.
+        self.assertEqual(merged["values"], ["ordertest:load", "rival:load", "storm:load"])
+        self.assertFalse(merged["replace"])
+
+    def test_origin_layers_from_several_origins_are_merged(self):
+        layer = "data/origins/origin_layers/origin.json"
+        self.write("origins/storm/" + layer, '{"replace": false, "origins": ["storm:storm"]}')
+        self.write("origins/rival/" + layer, '{"origins": ["rival:rival"]}')
+        merged = json.loads(pack_sources.datapack_files()[layer])
+        self.assertEqual(merged["origins"], ["rival:rival", "storm:storm"])
 
     def test_tests_and_effects_are_found_per_origin(self):
         self.assertIn(self.root / "origins/storm/tests.mctest", pack_sources.test_files())

@@ -250,12 +250,16 @@ def write_config():
     props_file.write_text("".join(f"{k}={v}\n" for k, v in existing.items()), encoding="utf-8")
 
 
-def copy_files(files: dict[str, Path], dest: Path):
+def copy_files(files: dict[str, Path | bytes], dest: Path):
+    """A value is a source file, or bytes for a file pack_sources merged from several origins."""
     if dest.exists():
         shutil.rmtree(dest)
     for rel, src in files.items():
         (dest / rel).parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dest / rel)
+        if isinstance(src, bytes):
+            (dest / rel).write_bytes(src)
+        else:
+            shutil.copy2(src, dest / rel)
 
 
 def copy_pack(dest: Path):
@@ -625,7 +629,10 @@ def cmd_zip(args) -> int:
     pack_zip = DIST_DIR / f"{PACK_ID}.zip"
     with zipfile.ZipFile(pack_zip, "w", zipfile.ZIP_DEFLATED) as z:
         for rel, src in pack_sources.datapack_files().items():
-            z.write(src, rel)
+            if isinstance(src, bytes):
+                z.writestr(rel, src)
+            else:
+                z.write(src, rel)
     scripts_zip = DIST_DIR / f"{PACK_ID}-kubejs.zip"
     with zipfile.ZipFile(scripts_zip, "w", zipfile.ZIP_DEFLATED) as z:
         for rel, src in pack_sources.script_files().items():

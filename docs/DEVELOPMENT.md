@@ -9,7 +9,8 @@ How the system is built, how to make domains and effects, how to test them, and 
 origins/<name>/                    one folder per origin, everything it needs (see "Adding an origin")
 kubejs/server_scripts/ordertest/   the shared engine (KubeJS, runs on the server)
   core.js                          open/close/tick, the chat trigger, /domain, Origins injection
-  components/*.js                  one behaviour per file: the wall, the dome, effects, titles, sounds...
+  components/<use case>/           one behaviour per file, grouped: catching/ barrier/ visuals/ feedback/
+                                   effects/ bridges/ (see components/README.md)
   domains/*.js                     shared domains not tied to one origin
 data/ordertest/                    shared datapack: mcfunction hooks other packs can plug effects into
 resourcepack/                      what players download: assets/ordertest/fx/<origin>/*.fx (generated)
@@ -65,6 +66,28 @@ Every origin of a server lives in this one repository, because a 1.20.1 server s
 pack. Others add an origin by forking, adding their folder, and opening a pull request; the tests run on the
 pull request before anything is merged.
 
+## Importing a saved origin datapack
+
+```powershell
+python tools/import_origin.py "C:/path/Werewolf-1.0.0-datapack.zip" --name werewolf
+python tools/validate.py
+python tools/testserver.py test
+```
+
+The importer takes the pack's `data/` (and its README) into `origins/<name>/`, refuses unsafe zip paths, moves
+stray files that sit directly in `data/` out beside the origin, and notes a `pack_format` other than 15. Files every
+Origins pack writes (`data/origins/origin_layers/origin.json`, `minecraft:load`, `minecraft:tick`, any tag) are
+merged with the other origins' copies at build time, the way Minecraft and Origins merge them across packs.
+
+`testserver.py test` grants every power on the real server, so a power that would not load shows up as a
+failure with Origins' own reason. Common ones in saved packs:
+
+| Origins says | Fix |
+|---|---|
+| `Unknown registry key: origins:status_effect` | There is no status-effect power. Use `origins:action_over_time` with an `origins:apply_effect` action |
+| `Unknown registry key: apoli:light_level` (in an entity condition) | `light_level` is a block condition; the entity one is `origins:brightness` (0 to 1) |
+| `Failed to load function ... Incorrect argument ... ~1.67772e+07` | Numbers in exponent notation; write them in full (`validate` flags these) |
+
 ## Making a domain
 
 `kubejs/server_scripts/ordertest/domains/example.js` shows every option:
@@ -82,8 +105,8 @@ and uses the default components.
 
 ## Making a component
 
-Copy the closest file in `components/` (`potion_effect.js` for something per player, `sphere_barrier.js` for
-per-tick world logic). Put every tunable number in `defaults`. Hooks receive a `ctx` with the domain's
+Copy the closest file in `components/` into the folder of its use case (`effects/potion_effect.js` for something
+per player, `barrier/sphere_barrier.js` for per-tick world logic); `components/README.md` lists the folders. Put every tunable number in `defaults`. Hooks receive a `ctx` with the domain's
 position, radius, members and helpers (`ctx.run`, `ctx.runAs`, `ctx.teleport`, `ctx.fmt` ...). The full API
 and the Rhino traps (no `Math.PI`, no `const` inside a `for` body, UUID getter names) are in
 `.claude/rules/kubejs.md`.

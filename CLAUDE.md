@@ -24,7 +24,8 @@ written in JS too and are injected as datapack JSON on every reload.
 ```
 kubejs/server_scripts/ordertest/
   core.js                 engine (priority 1000): OrderTest API, open/close/tick, chat trigger, /domain, origin injection
-  components/*.js         built-in components (priority 500), one per file
+  components/<use case>/  built-in components (priority 500), one per file, grouped by use case:
+                          catching/ barrier/ visuals/ feedback/ effects/ bridges/ (components/README.md)
   domains/*.js            shared domain definitions by name (what players register and type)
 origins/<name>/           ONE FOLDER PER ORIGIN, picked up by every tool with no registration:
   *.js                    its origin, powers, domains, own components (loaded as server_scripts/origins/<name>/)
@@ -50,6 +51,10 @@ data/ordertest/
   file or script path is an error (`validate` and every build stop on it). On 1.20.1 a server sends one
   resource pack, so every origin of a server lives in this one repository; contributors add folders by pull
   request, which CI tests before merge. A folder starting with `_` is ignored (drafts).
+- **Saved origin datapacks import** with `python tools/import_origin.py <zip or folder> --name <name>`. Tags and
+  origin layers that several origins write (every pack adds itself to `origins:origin`, many hook
+  `minecraft:load`/`tick`) are merged like Minecraft merges them across packs; any other shared file is an
+  error. `testserver.py test` grants every power, so a power that will not load fails with Origins' reason.
 - **A domain is a list of components**, each `[id, options]`. Defaults in `OrderTest.defaults`; a domain
   definition can replace, extend or remove components and override options (see `domains/example.js`).
 - **Names are tied to players.** `/domain register <player> <name>` stores the name in the player's KubeJS
@@ -141,9 +146,9 @@ the game log and the KubeJS log), `python tools/testserver.py rcon "<command>"`,
 
 | Layer | What | Where | Notes |
 |---|---|---|---|
-| Body | The dome: opaque block display panels facing the centre | `components/display_shell.js` | Carries the look on its own and needs no client mod. Colour per domain via `display_shell.block` |
-| Moment | Authored effects: open burst, looping aura, close, per-member aura | `components/photon_fx.js` + `resourcepack/assets/ordertest/fx/*.fx` | Needs Photon on players. Colour is baked into the `.fx` |
-| Accent | Vanilla particles sweeping the dome | `components/meridian_particles.js` | Mostly hidden behind an opaque dome; drop it per domain with `removeComponents` |
+| Body | The dome: opaque block display panels facing the centre | `components/visuals/display_shell.js` | Carries the look on its own and needs no client mod. Colour per domain via `display_shell.block` |
+| Moment | Authored effects: open burst, looping aura, close, per-member aura | `components/visuals/photon_fx.js` + `resourcepack/assets/ordertest/fx/*.fx` | Needs Photon on players. Colour is baked into the `.fx` |
+| Accent | Vanilla particles sweeping the dome | `components/visuals/meridian_particles.js` | Mostly hidden behind an opaque dome; drop it per domain with `removeComponents` |
 
 The body must read with Photon off (a player without the pack, or an effect that failed to load). Photon is
 the moment on top, never the only thing that makes a domain visible.

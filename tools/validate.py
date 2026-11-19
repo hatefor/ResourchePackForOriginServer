@@ -27,9 +27,14 @@ PHOTON_FX_OPTION = re.compile(r"\b(?:open|loop|close|enter|memberLoop|exit)\s*:\
 NAMESPACE = "ordertest"
 PACK_FORMAT = 15  # Minecraft 1.20.1
 ORIGINS_NAMESPACES = ("origins", "apoli")
-RESOURCE_TYPES = {f"{ns}:resource" for ns in ORIGINS_NAMESPACES}
-LOAD_FUNCTION = f"{NAMESPACE}:load"
+# Apoli stores a number in both, and resource conditions and actions accept either.
+RESOURCE_TYPES = {f"{ns}:{t}" for ns in ORIGINS_NAMESPACES for t in ("resource", "cooldown")}
+# Every namespace with files in the pack (shared data/ and every origin's data/), minus the ones it only adds to.
+OWN_NAMESPACES = {d.name for r in DATA_ROOTS for d in r.iterdir() if d.is_dir()} - {"minecraft", *ORIGINS_NAMESPACES}
+OWN_NAMESPACES.add(NAMESPACE)
 
+# Minecraft's number parser rejects exponent notation, so a function with "~1.67772e+07" fails to load.
+EXPONENT_NUMBER = re.compile(r"(?<![A-Za-z_])[~^]?-?\d+(?:\.\d+)?[eE][+-]?\d+(?![A-Za-z_])")
 FUNCTION_REF = re.compile(r"\bfunction\s+(#?[a-z0-9_.-]+:[a-z0-9_./-]+)")
 OBJECTIVE_ADD = re.compile(r"scoreboard objectives add\s+(\S+)")
 OBJECTIVE_USES = (
@@ -53,6 +58,7 @@ JS_CONST_IN_FOR = re.compile(r"\bfor\s*\([^)]*\)\s*\{[^}]*\bconst\b")
 JS_MATH_CONSTANT = re.compile(r"\bMath\.(PI|E|LN2|LN10|LOG2E|LOG10E|SQRT2|SQRT1_2)\b")
 # A list element: a string right after '[' or ',', never an object value like target: 'others'.
 JS_ORIGIN_POWERS = re.compile(r"OrderTest\.origin\([^)]*?powers\s*:\s*\[([^\]]*)\]", re.S)
+JS_POWER_DEF = re.compile(r"OrderTest\.power\(\s*'([a-z0-9_.-]+:[a-z0-9_./-]+)'")
 JS_ID = re.compile(r"'([a-z0-9_.-]+:[a-z0-9_./-]+)'")
 JS_STRING = re.compile(r"[\[,]\s*'([a-z0-9_]+)'")
 ENTITY_TYPE_TAG_REF = re.compile(r"type=!?#([a-z0-9_.-]+:[a-z0-9_./-]+)")
@@ -125,8 +131,10 @@ def main() -> int:
 
     functions = {resource_id(p, d, ".mcfunction"): p
                  for r in DATA_ROOTS for d in r.glob("*/functions") for p in d.rglob("*.mcfunction")}
-    function_tags = {f"#{d.parent.parent.name}:{p.relative_to(d).as_posix()[:-len('.json')]}": p
-                     for r in DATA_ROOTS for d in r.glob("*/tags/functions") for p in d.rglob("*.json")}
+    # One tag id can come from several origins (every pack hooks #minecraft:load); they merge, so read them all.
+    tag_files = [(f"#{d.parent.parent.name}:{p.relative_to(d).as_posix()[:-len('.json')]}", p)
+                 for r in DATA_ROOTS for d in r.glob("*/tags/functions") for p in d.rglob("*.json")]
+    function_tags = {tag_id: path for tag_id, path in tag_files}
     powers = {resource_id(p, d, ".json"): p for r in DATA_ROOTS for d in r.glob("*/powers") for p in d.rglob("*.json")}
     origins = {resource_id(p, d, ".json"): p for r in DATA_ROOTS for d in r.glob("*/origins") for p in d.rglob("*.json")}
 
@@ -135,10 +143,14 @@ def main() -> int:
         load_json(path, report)
 
     power_json = {pid: load_json(p, report) for pid, p in powers.items()}
+    # A "multiple" power defines sub-powers named <id>_<key>; other powers reference them by that id.
+    sub_powers = {f"{pid}_{key}": value for pid, data in power_json.items() if isinstance(data, dict)
+                  and str(data.get("type", "")).endswith(":multiple")
+                  for key, value in data.items() if isinstance(value, dict) and "type" in value}
     referenced_functions: dict[str, list[str]] = {}
     commands_by_source: list[tuple[Path, str]] = []
 
-    for tag_id, path in function_tags.items():
+    for tag_id, path in tag_files:
         tag = load_json(path, report) or {}
         for value in tag.get("values", []):
             ref = value if isinstance(value, str) else value.get("id", "")
@@ -151,12 +163,14 @@ def main() -> int:
                 continue
             if stripped.startswith("/"):
                 report.error(f"{rel(path)}:{number}", "mcfunction lines must not start with '/'")
+            if EXPONENT_NUMBER.search(stripped.split('{')[0]):
+                report.error(f"{rel(path)}:{number}", "number in exponent notation; Minecraft rejects it, write it in full")
             commands_by_source.append((path, stripped))
 
     for pid, data in power_json.items():
         if data is None:
             continue
-        check_power(pid, powers[pid], data, power_json, report)
+        check_power(pid, powers[pid], data, {**power_json, **sub_powers}, report)
         for text in walk_strings(data):
             if FUNCTION_REF.search(text):
                 commands_by_source.append((powers[pid], text))
@@ -167,7 +181,7 @@ def main() -> int:
 
     for ref, sources in referenced_functions.items():
         known = function_tags if ref.startswith("#") else functions
-        if ref.split(":")[0].lstrip("#") in (NAMESPACE, "minecraft") and ref not in known:
+        if ref.split(":")[0].lstrip("#") in OWN_NAMESPACES | {"minecraft"} and ref not in known:
             report.error(sources[0], f"references missing function {ref}")
 
     for fid, path in functions.items():
@@ -190,6 +204,14 @@ def main() -> int:
     print(f"\nvalidate: {len(report.errors)} error(s), {len(report.warnings)} warning(s); "
           f"{len(functions)} functions, {len(powers)} powers, {len(origins)} origin(s), {scripts} script(s)")
     return 1 if report.errors else 0
+
+
+def js_powers() -> set[str]:
+    """Powers the KubeJS scripts define with OrderTest.power, which an origin may list."""
+    found = set()
+    for script in pack_sources.script_files().values():
+        found.update(JS_POWER_DEF.findall(script.read_text(encoding="utf-8")))
+    return found
 
 
 def check_sources(report: Report):
@@ -215,12 +237,15 @@ def check_power(pid: str, path: Path, data: dict, all_powers: dict, report: Repo
     power_type = data.get("type")
     if not isinstance(power_type, str) or ":" not in power_type:
         report.error(path, "power has no namespaced 'type'")
-    elif power_type.split(":")[0] not in ORIGINS_NAMESPACES and power_type.split(":")[0] != NAMESPACE:
+    elif power_type.split(":")[0] not in ORIGINS_NAMESPACES and power_type.split(":")[0] not in OWN_NAMESPACES:
         report.warn(path, f"power type {power_type} is from an add-on; make sure the server has it")
     if not data.get("hidden") and (not data.get("name") or not data.get("description")):
         report.warn(path, "visible power has no name or description (set \"hidden\": true if intended)")
     for node in walk_dicts(data):
         ref = node.get("resource")
+        # "*:*_x" is Origins' wildcard for "this power's own namespace and path".
+        if isinstance(ref, str) and "*" in ref:
+            ref = ref.replace("*:*", pid, 1).replace("*", pid.split(":")[0], 1) if ref.startswith("*:*") else None
         if isinstance(ref, str):
             target = all_powers.get(ref)
             if ref not in all_powers:
@@ -244,7 +269,7 @@ def check_origins(origins: dict, powers: dict, report: Report):
                 report.warn(path, f"origin has no '{field}'")
         for ref in data.get("powers", []):
             used.add(ref)
-            if ref.split(":")[0] == NAMESPACE and ref not in powers:
+            if ref.split(":")[0] in OWN_NAMESPACES and ref not in powers and ref not in js_powers():
                 report.error(path, f"lists missing power {ref}")
     for pid, path in powers.items():
         if pid not in used:
@@ -259,21 +284,23 @@ def check_layers(origins: dict, report: Report):
         for entry in layer.get("origins", []):
             refs = [entry] if isinstance(entry, str) else entry.get("origins", [])
             for ref in refs:
-                if ref.split(":")[0] == NAMESPACE and ref not in origins:
+                if ref.split(":")[0] in OWN_NAMESPACES and ref not in origins:
                     report.error(layer_path, f"lists missing origin {ref}")
 
 
 def check_scoreboards(functions: dict, power_json: dict, powers: dict, commands, report: Report):
-    load_path = functions.get(LOAD_FUNCTION)
-    created = set(OBJECTIVE_ADD.findall(load_path.read_text(encoding="utf-8"))) if load_path else set()
+    """An objective counts as created when any function in the pack creates it (each origin has its own load)."""
+    created = set()
+    for path in functions.values():
+        created.update(OBJECTIVE_ADD.findall(path.read_text(encoding="utf-8")))
     for source, command in commands:
         for name in objective_names(command):
             if name not in created:
-                report.error(source, f"scoreboard objective '{name}' is used but not created in {LOAD_FUNCTION}")
+                report.error(source, f"scoreboard objective '{name}' is used but no function creates it")
     for pid, data in power_json.items():
         for node in walk_dicts(data or {}):
             if str(node.get("type", "")).endswith(":scoreboard") and node.get("objective") not in created:
-                report.error(powers[pid], f"scoreboard objective '{node.get('objective')}' is not created in {LOAD_FUNCTION}")
+                report.error(powers[pid], f"scoreboard objective '{node.get('objective')}' is used but no function creates it")
 
 
 def check_tags(commands, report: Report):
@@ -296,7 +323,7 @@ def check_entity_type_tags(commands, report: Report):
         for ref in ENTITY_TYPE_TAG_REF.findall(command):
             namespace, path = ref.split(":")
             tag_file = Path(namespace) / "tags" / "entity_types" / f"{path}.json"
-            if namespace == NAMESPACE and not any((r / tag_file).exists() for r in DATA_ROOTS):
+            if namespace in OWN_NAMESPACES and not any((r / tag_file).exists() for r in DATA_ROOTS):
                 report.error(source, f"uses missing entity type tag #{ref}")
 
 

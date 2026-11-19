@@ -6,10 +6,15 @@
     origins/<name>/*.mctest       headless tests
 
 Every tool (test server, dev client, validator, generator, zips, release) reads these functions, so a new
-origin folder is picked up everywhere with no registration. Two sources writing the same file is an error.
+origin folder is picked up everywhere with no registration. Two sources writing the same file is an error,
+except for files Minecraft and Origins themselves merge across datapacks: tags (union of "values") and origin
+layers (union of "origins"). Those are merged here the same way, so many imported origins can each add
+themselves to data/origins/origin_layers/origin.json or hook minecraft:load and minecraft:tick.
 """
 from __future__ import annotations
 
+import json
+import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -43,15 +48,53 @@ def _add(files: dict[str, Path], rel: str, src: Path):
     files[rel] = src
 
 
-def datapack_files() -> dict[str, Path]:
-    """Every file of the shipped datapack, keyed by its path inside the pack (pack.mcmeta, data/...)."""
-    files: dict[str, Path] = {}
-    _add(files, "pack.mcmeta", PACK_META)
+MERGED_TAG = re.compile(r"^data/[^/]+/tags/.+\.json$")
+MERGED_LAYER = re.compile(r"^data/[^/]+/origin_layers/.+\.json$")
+
+
+def datapack_files() -> dict[str, Path | bytes]:
+    """Every file of the shipped datapack, keyed by its path inside the pack (pack.mcmeta, data/...).
+    A value is the source file, or the merged JSON bytes when several sources share a mergeable file."""
+    sources: dict[str, list[Path]] = {"pack.mcmeta": [PACK_META]}
     for root in data_roots():
         for src in sorted(root.rglob("*")):
             if src.is_file():
-                _add(files, "data/" + src.relative_to(root).as_posix(), src)
+                sources.setdefault("data/" + src.relative_to(root).as_posix(), []).append(src)
+    files: dict[str, Path | bytes] = {}
+    for rel, srcs in sources.items():
+        if len(srcs) == 1:
+            files[rel] = srcs[0]
+        elif MERGED_TAG.match(rel):
+            files[rel] = _merge(srcs, "values")
+        elif MERGED_LAYER.match(rel):
+            files[rel] = _merge(srcs, "origins")
+        else:
+            names = " and ".join(str(s.relative_to(REPO)) for s in srcs)
+            raise SourceConflict(f"{rel} comes from both {names}")
     return files
+
+
+def _merge(srcs: list[Path], list_key: str) -> bytes:
+    """Union of list_key across the sources, in order, with the first source's other fields; replace if any does."""
+    merged: dict = {}
+    seen: set[str] = set()
+    entries: list = []
+    for src in srcs:
+        try:
+            data = json.loads(src.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as error:
+            raise SourceConflict(f"cannot merge {src.relative_to(REPO)}: invalid JSON ({error})") from error
+        for key, value in data.items():
+            if key != list_key:
+                merged.setdefault(key, value)
+        merged["replace"] = bool(merged.get("replace")) or bool(data.get("replace"))
+        for entry in data.get(list_key, []):
+            key = json.dumps(entry, sort_keys=True)
+            if key not in seen:
+                seen.add(key)
+                entries.append(entry)
+    merged[list_key] = entries
+    return (json.dumps(merged, indent=2) + "\n").encode("utf-8")
 
 
 def script_files() -> dict[str, Path]:
