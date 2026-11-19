@@ -1,5 +1,6 @@
-// An Origins origin written in JS. The core injects these as datapack JSON on every /reload, so editing this
-// file and running /reload changes the origin. Power and origin JSON use the normal Origins 1.10 format.
+// The Domain Caster origin, written in JS. The core injects it as datapack JSON on every /reload, so editing this
+// file and running /reload changes the origin. Power and origin JSON use the normal Origins 1.10 format; the same
+// JSON could instead live in this folder's data/ as plain datapack files.
 global.OrderTest.power('ordertest:cast_domain', {
   type: 'origins:active_self',
   name: 'Domain Expansion',

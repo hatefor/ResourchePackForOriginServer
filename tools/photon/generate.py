@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Build every effect in tools/photon/effects/*.py into the server resource pack.
+"""Build every effect into the server resource pack: shared ones in tools/photon/effects/*.py and each origin's
+origins/<name>/effects.py. An origin's effects are named ordertest:<origin>/<effect> (fx/<origin>/<effect>.fx),
+so two origins can never collide.
 
     python -I tools/photon/generate.py          # write resourcepack/assets/ordertest/fx/<name>.fx
     python -I tools/photon/generate.py --check  # build and check only (budget, one-shot rules, round trip)
@@ -17,28 +19,30 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.dirname(HERE))
 
 import fx  # noqa: E402
 import nbt  # noqa: E402
+import pack_sources  # noqa: E402
 
 REPO = os.path.dirname(os.path.dirname(HERE))
 NAMESPACE = "ordertest"
 OUT_DIR = os.path.join(REPO, "resourcepack", "assets", NAMESPACE, "fx")
-EFFECTS_DIR = os.path.join(HERE, "effects")
 
 
 def load_effects() -> dict:
+    """{effect id path: build function}; an origin's effects are prefixed with '<origin>/'."""
     effects = {}
-    for file in sorted(os.listdir(EFFECTS_DIR)):
-        if not file.endswith(".py") or file.startswith("_"):
-            continue
-        spec = importlib.util.spec_from_file_location("effects_" + file[:-3], os.path.join(EFFECTS_DIR, file))
+    for origin, file in pack_sources.effect_modules():
+        module_name = "effects_" + (origin or "shared") + "_" + file.stem
+        spec = importlib.util.spec_from_file_location(module_name, file)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         for name, build in getattr(module, "EFFECTS", {}).items():
-            if name in effects:
-                raise SystemExit(f"effect {name} is defined twice ({file})")
-            effects[name] = build
+            key = f"{origin}/{name}" if origin else name
+            if key in effects:
+                raise SystemExit(f"effect {key} is defined twice ({file})")
+            effects[key] = build
     return effects
 
 

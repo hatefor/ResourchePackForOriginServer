@@ -14,7 +14,8 @@ description: Add or change a piece of the Order test domain system - a JS compon
 | A behaviour every domain has | A new component added to `OrderTest.defaults.components` in `core.js` |
 | An effect a datapack author can write | An mcfunction in a `#ordertest:domain/*` tag, filtered by `ot_in_<slug>` |
 | An Origins power while inside | `['origins_power', { power: 'ns:id', target: 'others' }]` |
-| A new origin or power | `OrderTest.power` / `OrderTest.origin` in `kubejs/server_scripts/ordertest/origins/` |
+| A new origin | `python tools/new_origin.py <name>`: everything goes in `origins/<name>/` (scripts, `data/`, `effects.py`, tests) |
+| A power for an existing origin | `OrderTest.power` in its `origins/<name>/*.js`, or JSON in its `origins/<name>/data/` |
 
 Read `.claude/rules/kubejs.md` (and `datapack.md` for hooks) first.
 
@@ -24,7 +25,8 @@ Read `.claude/rules/kubejs.md` (and `datapack.md` for hooks) first.
   { defaults: {...}, <hooks> })`. Copy the closest existing one (`potion_effect` for a per-member effect,
   `sphere_barrier` for per-tick world logic, `sounds` for open/close only).
 - Every number a user might tune goes in `defaults`.
-- A domain is one file `domains/<slug>.js` calling `global.OrderTest.domain('<Name>', {...})`.
+- A domain is a `global.OrderTest.domain('<Name>', {...})` call: in its origin's folder (`origins/<name>/domain.js`),
+  or in `kubejs/server_scripts/ordertest/domains/` when no single origin owns it.
 - Hooks never throw; guard anything that can be null (`ctx.ownerEntity()` is null when the owner is offline).
 
 ## 3. Verify

@@ -2,6 +2,8 @@
 paths:
   - "data/**"
   - "tests/**"
+  - "origins/*/data/**"
+  - "origins/*/*.mctest"
 ---
 
 # Datapack hooks (1.20.1)

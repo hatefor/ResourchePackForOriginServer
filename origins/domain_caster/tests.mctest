@@ -1,0 +1,19 @@
+# Domain Caster: its domain, its Photon effects and its JS-defined origin, run headless on the test server.
+# A line is a command, optionally "=> regex" the RCON reply must match. "wait <ticks>" pauses.
+
+# forceload loads the chunk asynchronously, so wait before summoning into it.
+forceload add 200 200 216 216
+wait 20
+kill @e[tag=t_dc]
+summon minecraft:zombie 208.5 -60 208.5 {Tags:["t_dc","t_dc_caster"],NoAI:1b,Silent:1b,Invulnerable:1b,PersistenceRequired:1b} => Summoned new Zombie
+
+# Its domain opens and closes with its Photon effects and no errors (the effects render on clients only)
+domain open @e[tag=t_dc_caster,limit=1] Photon Example => Opened Photon Example
+wait 5
+domain close @e[tag=t_dc_caster,limit=1] => Closed Photon Example
+
+# The power and origin defined in origin.js reached Origins through the KubeJS data injection
+power grant @e[tag=t_dc_caster,limit=1] ordertest:cast_domain => granted the power Domain Expansion
+
+kill @e[tag=t_dc]
+forceload remove 200 200 216 216

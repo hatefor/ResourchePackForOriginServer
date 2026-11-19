@@ -74,7 +74,7 @@ class Rules(unittest.TestCase):
 
 class Output(unittest.TestCase):
     def test_same_effect_gives_same_bytes(self):
-        build = generate.load_effects()["domain_open"]
+        build = generate.load_effects()["domain_caster/domain_open"]
         self.assertEqual(build().encode(), build().encode())
 
     def test_every_shipped_effect_builds_cleanly_and_round_trips(self):

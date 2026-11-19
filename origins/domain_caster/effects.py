@@ -1,4 +1,5 @@
-"""The Photon Example domain's effects, authored for radius 15 (photon_fx scales them with the domain's radius).
+"""The Domain Caster's effects, released as ordertest:domain_caster/<name>. Authored for radius 15 (photon_fx scales
+them with the domain's radius).
 
 Positions and directions are Function-shape expressions Photon evaluates on each client. A uniform random
 direction is u = 2*randomB-1 (height) and 2*PI*randomA (angle); randomA..E keep one value per particle across

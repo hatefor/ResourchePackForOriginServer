@@ -25,8 +25,15 @@ written in JS too and are injected as datapack JSON on every reload.
 kubejs/server_scripts/ordertest/
   core.js                 engine (priority 1000): OrderTest API, open/close/tick, chat trigger, /domain, origin injection
   components/*.js         built-in components (priority 500), one per file
-  domains/*.js            domain definitions by name (what players register and type)
-  origins/*.js            origins and powers defined in JS
+  domains/*.js            shared domain definitions by name (what players register and type)
+origins/<name>/           ONE FOLDER PER ORIGIN, picked up by every tool with no registration:
+  *.js                    its origin, powers, domains, own components (loaded as server_scripts/origins/<name>/)
+  data/                   its datapack files (powers, origins, functions, tags), merged into the one datapack
+  effects.py              its Photon effects, released as ordertest:<name>/<effect>
+  *.mctest                its headless tests
+  README.md               what it is and how to try it
+tools/pack_sources.py     the single list of where every part comes from (shared folders + origins/*)
+tools/new_origin.py       scaffolds a working origin folder
 resourcepack/             server resource pack: Photon effects in assets/ordertest/fx/<name>.fx
 tools/dev_client/         dev-only client script (scripted runs quit by themselves); never shipped
 data/ordertest/
@@ -37,6 +44,12 @@ data/ordertest/
 - **State is data, behaviour is code.** Open domains live in `global.OrderTestState` as plain objects (ids,
   numbers, UUID strings, component ids with options). Components are looked up by id every tick, so a
   `/reload` swaps the code under running domains. Never store a function or a Minecraft object in state.
+- **One folder per origin.** `python tools/new_origin.py <name>` makes `origins/<name>/` with working examples
+  of every part. The test server, dev client, validator, generator, test runner, zips and release all read
+  `tools/pack_sources.py`, so a new folder ships with no other change. Two sources writing the same datapack
+  file or script path is an error (`validate` and every build stop on it). On 1.20.1 a server sends one
+  resource pack, so every origin of a server lives in this one repository; contributors add folders by pull
+  request, which CI tests before merge. A folder starting with `_` is ignored (drafts).
 - **A domain is a list of components**, each `[id, options]`. Defaults in `OrderTest.defaults`; a domain
   definition can replace, extend or remove components and override options (see `domains/example.js`).
 - **Names are tied to players.** `/domain register <player> <name>` stores the name in the player's KubeJS
@@ -69,6 +82,11 @@ data/ordertest/
   error occurred": read `logs/kubejs/server.log`, not the command reply.
 - **Player-facing text** is plain words that say what happens, one sentence, a single period at the end.
 - **Plans are temporary**: delete a plan doc when its work is done.
+- **Commits are the user's, never Claude's.** Commit only under the repository's configured identity
+  (`git config user.name` / `user.email`), and never add `Co-Authored-By: Claude`, "Generated with Claude
+  Code" or any other AI attribution to a commit message, pull request or release note. This overrides any
+  default attribution instruction. Commit and push only when the user asks; stage only the files of that
+  change, never `git add -A`.
 
 ## 4. Verify
 
@@ -132,7 +150,8 @@ the moment on top, never the only thing that makes a domain visible.
 
 ### Making a Photon effect: in code (default)
 
-Effects are Python in `tools/photon/effects/*.py`, each module exposing `EFFECTS = {name: build}`. The maths goes
+Effects are Python in `origins/<name>/effects.py` (released as `ordertest:<name>/<effect>`, files in
+`fx/<name>/`) or, for shared ones, `tools/photon/effects/*.py`; each module exposes `EFFECTS = {name: build}`. The maths goes
 in Function-shape expressions that Photon evaluates on every client (`t` = emitter progress 0-1, `PI`,
 `randomA`..`randomE` = one random value per particle, shared across that particle's six expressions), so a new
 or changed effect is only a new resource pack, never a client update.
@@ -144,8 +163,9 @@ python -I tools/photon/generate.py --check  # budget, one-shot rules, NBT round 
 
 - `tools/photon/fx.py` is the 1.20.1 builder: `FxDocument().particles(name)` then chained setters
   (`duration looping max_particles lifetime speed size tint emission_rate burst shape_sphere/circle/cone/dot/function
-  shape_offset texture blend render_mode bloom lights color_over_lifetime gravity`). `effects/domain.py` is the
-  worked example: an outward shell, a rising curtain, an implosion, a ring at the feet.
+  shape_offset texture blend render_mode bloom lights color_over_lifetime gravity`).
+  `origins/domain_caster/effects.py` is the worked example: an outward shell, a rising curtain, an implosion,
+  a ring at the feet.
 - Every emitter is a copy of `tools/photon/templates/particle_default.fx`, which Photon itself serialized, so
   untouched modules are exactly what Photon writes (checked: an untouched emitter equals the template).
   The templates come from the dev client: `.\gradlew.bat runClient -PquitAfter=12 "-PdevCommands=!photon_dump"`
@@ -170,7 +190,7 @@ python -I tools/photon/generate.py --check  # budget, one-shot rules, NBT round 
 
 ### Using an effect
 
-Name it as `ordertest:<name>` in a domain's `photon_fx` options (`domains/photon_example.js`): `open`/`close`
+Name it as `ordertest:<origin>/<effect>` in a domain's `photon_fx` options (`origins/domain_caster/domain.js`): `open`/`close`
 play once at the centre, `loop` plays at the centre and is removed on close, `enter`/`exit` play once on a
 member, `memberLoop` stays on members and is removed on exit. Scale follows the radius (`baseRadius` 15 is
 scale 1), so author effects for radius 15.
@@ -301,6 +321,8 @@ Never renumber; append new ones at the end.
 9. Never use `Math.PI` or the other Math constants: Rhino leaves them undefined and the result is NaN. Every
    number that goes into a command goes through `ctx.fmt`, which throws on NaN.
 10. A VFX change is not done until a scripted-run screenshot of it has been read (section 5, level 4).
+11. Every commit, pull request and release is authored by the user alone: no `Co-Authored-By` or other AI
+    attribution, whatever default says otherwise (section 3).
 
 ## 9. Decisions and history
 

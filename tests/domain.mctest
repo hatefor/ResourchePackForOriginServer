@@ -77,14 +77,6 @@ execute positioned 40.5 -55 40.5 if entity @e[tag=t_walker,distance=..15] => Tes
 execute if entity @e[tag=t_walker,y=-61,dy=0.9] => Test failed
 domain close @e[tag=t_high,limit=1] => Closed Tower
 
-# A domain with Photon effects opens and closes without errors (the effects themselves render on clients only)
-domain open @e[tag=t_walker,limit=1] Photon Example => Opened Photon Example
-wait 5
-domain close @e[tag=t_walker,limit=1] => Closed Photon Example
-
-# The origin defined in JS reached Origins through the KubeJS data injection
-power grant @e[tag=t_victim,limit=1] ordertest:cast_domain => granted the power Domain Expansion
-
 kill @e[tag=t_dom]
 forceload remove -1 -1 3 3
 forceload remove 30 30 75 45

@@ -32,9 +32,11 @@ import urllib.request
 import zipfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pack_sources  # noqa: E402
+
 REPO = Path(__file__).resolve().parent.parent
 PACK_ID = "ordertest"
-PACK_FILES = ("pack.mcmeta", "data")
 SCRIPTS_DIR = REPO / "kubejs" / "server_scripts"
 SERVER_DIR = REPO / ".testserver"
 WORLD_DIR = SERVER_DIR / "world"
@@ -43,7 +45,6 @@ SERVER_SCRIPTS_DEST = SERVER_DIR / "kubejs" / "server_scripts"
 STATE_FILE = SERVER_DIR / "devserver.json"
 LOG_FILE = SERVER_DIR / "logs" / "latest.log"
 KUBEJS_LOG_FILE = SERVER_DIR / "logs" / "kubejs" / "server.log"
-TESTS_DIR = REPO / "tests"
 CLIENT_DIR = REPO / "run"
 CLIENT_SAVES_DIR = CLIENT_DIR / "saves"
 CLIENT_SCRIPTS_LINK = CLIENT_DIR / "kubejs" / "server_scripts"
@@ -249,20 +250,22 @@ def write_config():
     props_file.write_text("".join(f"{k}={v}\n" for k, v in existing.items()), encoding="utf-8")
 
 
-def copy_pack(dest: Path):
+def copy_files(files: dict[str, Path], dest: Path):
     if dest.exists():
         shutil.rmtree(dest)
-    dest.mkdir(parents=True)
-    for name in PACK_FILES:
-        src = REPO / name
-        (shutil.copytree if src.is_dir() else shutil.copy2)(src, dest / name)
+    for rel, src in files.items():
+        (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest / rel)
+
+
+def copy_pack(dest: Path):
+    """The shipped datapack: data/ plus every origins/<name>/data/, merged."""
+    copy_files(pack_sources.datapack_files(), dest)
 
 
 def sync_pack():
     copy_pack(PACK_DEST)
-    if SERVER_SCRIPTS_DEST.exists():
-        shutil.rmtree(SERVER_SCRIPTS_DEST)
-    shutil.copytree(SCRIPTS_DIR, SERVER_SCRIPTS_DEST)
+    copy_files(pack_sources.script_files(), SERVER_SCRIPTS_DEST)
 
 
 # ---------- lifecycle ----------
@@ -411,11 +414,12 @@ def cmd_rcon(args) -> int:
 def pack_powers() -> list[str]:
     """Powers from datapack JSON plus powers the KubeJS scripts inject with OrderTest.power."""
     powers = []
-    for namespace in (REPO / "data").iterdir():
-        powers_dir = namespace / "powers"
-        for path in powers_dir.rglob("*.json"):
-            powers.append(f"{namespace.name}:{path.relative_to(powers_dir).as_posix()[:-len('.json')]}")
-    for script in SCRIPTS_DIR.rglob("*.js"):
+    for root in pack_sources.data_roots():
+        for namespace in root.iterdir():
+            powers_dir = namespace / "powers"
+            for path in powers_dir.rglob("*.json"):
+                powers.append(f"{namespace.name}:{path.relative_to(powers_dir).as_posix()[:-len('.json')]}")
+    for script in pack_sources.script_files().values():
         powers += JS_POWER_PATTERN.findall(script.read_text(encoding="utf-8"))
     return sorted(set(powers))
 
@@ -474,7 +478,7 @@ def cmd_test(args) -> int:
         report_load_errors(errors)
         script_log_offset = log_size(KUBEJS_LOG_FILE)
         results = run_builtin_checks(rcon)
-        files = [Path(f) for f in args.files] if args.files else sorted(TESTS_DIR.glob("*.mctest"))
+        files = [Path(f) for f in args.files] if args.files else pack_sources.test_files()
         for test_file in files:
             results += run_test_file(rcon, test_file)
         rcon.close()
@@ -505,7 +509,7 @@ def cmd_client_world(args) -> int:
         print(f"Created client test world {dest}")
     copy_pack(dest / "datapacks" / PACK_ID)
     print(f"Synced the pack into {dest / 'datapacks' / PACK_ID}")
-    link_into_client(CLIENT_SCRIPTS_LINK, SCRIPTS_DIR)
+    link_client_scripts()
     link_into_client(CLIENT_RESOURCEPACK_LINK, RESOURCEPACK_DIR)
     link_into_client(CLIENT_EDITOR_EXPORT_LINK, RESOURCEPACK_DIR / "assets" / PACK_ID)
     enable_client_resource_pack()
@@ -531,6 +535,19 @@ def write_dev_run_config(args):
     CLIENT_DEV_CONFIG.parent.mkdir(parents=True, exist_ok=True)
     CLIENT_DEV_CONFIG.write_text(json.dumps(config, indent=2), encoding="utf-8")
     print(f"Scripted run: {config}")
+
+
+def link_client_scripts():
+    """run/kubejs/server_scripts is a real folder holding two links: the shared scripts and origins/. KubeJS only
+    loads .js, so an origin's effects, tests and data beside its scripts are ignored there."""
+    if CLIENT_SCRIPTS_LINK.is_junction() or CLIENT_SCRIPTS_LINK.is_symlink():
+        os.rmdir(CLIENT_SCRIPTS_LINK) if os.name == "nt" else CLIENT_SCRIPTS_LINK.unlink()
+    CLIENT_SCRIPTS_LINK.mkdir(parents=True, exist_ok=True)
+    for entry in SCRIPTS_DIR.iterdir():
+        if entry.is_dir():
+            link_into_client(CLIENT_SCRIPTS_LINK / entry.name, entry)
+    pack_sources.ORIGINS_DIR.mkdir(exist_ok=True)
+    link_into_client(CLIENT_SCRIPTS_LINK / pack_sources.ORIGIN_SCRIPTS_PREFIX, pack_sources.ORIGINS_DIR)
 
 
 def link_into_client(link: Path, target: Path):
@@ -599,7 +616,7 @@ def cmd_deploy(args) -> int:
     dest = save / "datapacks" / PACK_ID
     copy_pack(dest)
     print(f"Copied the datapack to {dest}. The domain engine also needs KubeJS in that instance and the")
-    print(f"scripts from {SCRIPTS_DIR} in its kubejs/server_scripts folder. In game run /reload.")
+    print("scripts from dist/ordertest-kubejs.zip (python tools/testserver.py zip). In game run /reload.")
     return 0
 
 
@@ -607,14 +624,12 @@ def cmd_zip(args) -> int:
     DIST_DIR.mkdir(exist_ok=True)
     pack_zip = DIST_DIR / f"{PACK_ID}.zip"
     with zipfile.ZipFile(pack_zip, "w", zipfile.ZIP_DEFLATED) as z:
-        z.write(REPO / "pack.mcmeta", "pack.mcmeta")
-        for file in sorted((REPO / "data").rglob("*")):
-            if file.is_file():
-                z.write(file, file.relative_to(REPO).as_posix())
+        for rel, src in pack_sources.datapack_files().items():
+            z.write(src, rel)
     scripts_zip = DIST_DIR / f"{PACK_ID}-kubejs.zip"
     with zipfile.ZipFile(scripts_zip, "w", zipfile.ZIP_DEFLATED) as z:
-        for file in sorted(SCRIPTS_DIR.rglob("*.js")):
-            z.write(file, file.relative_to(REPO).as_posix())
+        for rel, src in pack_sources.script_files().items():
+            z.write(src, "kubejs/server_scripts/" + rel)
     resources_zip = DIST_DIR / f"{PACK_ID}-resources.zip"
     with zipfile.ZipFile(resources_zip, "w", zipfile.ZIP_DEFLATED) as z:
         for file in sorted(RESOURCEPACK_DIR.rglob("*")):
@@ -689,7 +704,7 @@ def cmd_bundle(args) -> int:
         if prefix == "photon-":
             (BUNDLE_DIR / "player-mods").mkdir(exist_ok=True)
             shutil.copy2(jar, BUNDLE_DIR / "player-mods" / name)
-    shutil.copytree(SCRIPTS_DIR, BUNDLE_DIR / "kubejs" / "server_scripts")
+    copy_files(pack_sources.script_files(), BUNDLE_DIR / "kubejs" / "server_scripts")
     (BUNDLE_DIR / "world" / "datapacks").mkdir(parents=True)
     shutil.copy2(DIST_DIR / f"{PACK_ID}.zip", BUNDLE_DIR / "world" / "datapacks" / f"{PACK_ID}.zip")
     (BUNDLE_DIR / "HOST-THIS").mkdir()

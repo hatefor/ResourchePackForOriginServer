@@ -6,16 +6,15 @@ How the system is built, how to make domains and effects, how to test them, and 
 ## How it fits together
 
 ```
-kubejs/server_scripts/ordertest/   the engine and everything a domain does (KubeJS, runs on the server)
+origins/<name>/                    one folder per origin, everything it needs (see "Adding an origin")
+kubejs/server_scripts/ordertest/   the shared engine (KubeJS, runs on the server)
   core.js                          open/close/tick, the chat trigger, /domain, Origins injection
   components/*.js                  one behaviour per file: the wall, the dome, effects, titles, sounds...
-  domains/*.js                     named domains: which components, radius, duration, cooldown
-  origins/*.js                     Origins origins and powers written in JS
-data/ordertest/                    datapack: mcfunction hooks other packs can plug effects into
-tools/photon/effects/*.py          Photon effects as Python; generate.py writes them into resourcepack/
-resourcepack/                      what players download: assets/ordertest/fx/*.fx
-tests/domain.mctest                headless tests driven over RCON
-tools/                             the test server, validator, generator and dev-client helpers
+  domains/*.js                     shared domains not tied to one origin
+data/ordertest/                    shared datapack: mcfunction hooks other packs can plug effects into
+resourcepack/                      what players download: assets/ordertest/fx/<origin>/*.fx (generated)
+tests/domain.mctest                shared headless tests driven over RCON
+tools/                             the test server, validator, generator, scaffold and dev-client helpers
 ```
 
 A domain is a list of **components**. Each component is a small JS object with hooks (`open`, `enter`, `tick`,
@@ -36,6 +35,35 @@ expressions evaluated on each player's game, so new effects never need a client 
 python tools/testserver.py setup        # installs a local Forge test server with the same mods
 .\gradlew.bat runClient                 # first run downloads Minecraft; opens straight into a test world
 ```
+
+## Adding an origin
+
+```powershell
+python tools/new_origin.py storm_caller --title "Storm Caller"
+python -I tools/photon/generate.py
+python tools/validate.py
+python tools/testserver.py test
+```
+
+That creates `origins/storm_caller/` with a working example of every part:
+
+| File | What it is | Where it ends up |
+|---|---|---|
+| `origin.js` | The origin in JS (or put origin JSON in `data/` instead) | Loaded by KubeJS as `server_scripts/origins/storm_caller/` |
+| `data/ordertest/powers/storm_caller/*.json` | Powers (and any functions, tags, origins) as plain datapack files | Merged into the shipped datapack automatically |
+| `domain.js` | Its domain | Loaded by KubeJS |
+| `effects.py` | Its Photon effects | `ordertest:storm_caller/<effect>` in the resource pack |
+| `tests.mctest` | Its headless tests | Run by `testserver.py test` and CI |
+| `README.md` | What it is and how to try it | Only in the repository |
+
+Nothing else needs registering: the test server, dev client, validator, generator, zips and release all find
+the folder themselves. If two origins (or an origin and the shared folders) write the same datapack file or
+script path, the validator and every build stop with an error instead of one overwriting the other. Rename
+the folder to start with `_` to keep a draft out of everything.
+
+Every origin of a server lives in this one repository, because a 1.20.1 server sends exactly one resource
+pack. Others add an origin by forking, adding their folder, and opening a pull request; the tests run on the
+pull request before anything is merged.
 
 ## Making a domain
 
@@ -62,7 +90,8 @@ and the Rhino traps (no `Math.PI`, no `const` inside a `for` body, UUID getter n
 
 ## Making an effect
 
-Effects are Python in `tools/photon/effects/*.py`; `domain.py` is the worked example.
+Effects are Python in an origin's `effects.py` (`origins/domain_caster/effects.py` is the worked example), or
+in `tools/photon/effects/*.py` for effects shared by several origins.
 
 ```python
 import fx
@@ -85,7 +114,8 @@ per particle. x/y/z place the particle; speed_x/y/z give its direction and `spee
 python -I tools/photon/generate.py      # writes resourcepack/assets/ordertest/fx/ring_burst.fx
 ```
 
-Play it from a domain with the `photon_fx` component (`domains/photon_example.js`): `open`, `close` and
+An origin's effect is named `ordertest:<origin>/<effect>`. Play it from a domain with the `photon_fx` component
+(`origins/domain_caster/domain.js`): `open`, `close` and
 `loop` at the centre, `enter`, `exit` and `memberLoop` on the people inside. Effects can also be made by hand
 with `/photon_editor` in the dev client.
 

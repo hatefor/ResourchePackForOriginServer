@@ -17,8 +17,11 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-DATA = REPO / "data"
-SCRIPTS = REPO / "kubejs" / "server_scripts"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pack_sources  # noqa: E402
+
+# The shared data/ plus every origins/<name>/data/, which ship merged as one datapack.
+DATA_ROOTS = pack_sources.data_roots()
 RESOURCEPACK = REPO / "resourcepack"
 PHOTON_FX_OPTION = re.compile(r"\b(?:open|loop|close|enter|memberLoop|exit)\s*:\s*'([a-z0-9_.-]+):([a-z0-9_./-]+)'")
 NAMESPACE = "ordertest"
@@ -49,6 +52,8 @@ JS_CONST_IN_FOR = re.compile(r"\bfor\s*\([^)]*\)\s*\{[^}]*\bconst\b")
 # Undefined in KubeJS's Rhino, so any maths using them silently becomes NaN.
 JS_MATH_CONSTANT = re.compile(r"\bMath\.(PI|E|LN2|LN10|LOG2E|LOG10E|SQRT2|SQRT1_2)\b")
 # A list element: a string right after '[' or ',', never an object value like target: 'others'.
+JS_ORIGIN_POWERS = re.compile(r"OrderTest\.origin\([^)]*?powers\s*:\s*\[([^\]]*)\]", re.S)
+JS_ID = re.compile(r"'([a-z0-9_.-]+:[a-z0-9_./-]+)'")
 JS_STRING = re.compile(r"[\[,]\s*'([a-z0-9_]+)'")
 ENTITY_TYPE_TAG_REF = re.compile(r"type=!?#([a-z0-9_.-]+:[a-z0-9_./-]+)")
 
@@ -119,13 +124,14 @@ def main() -> int:
     check_pack_meta(report)
 
     functions = {resource_id(p, d, ".mcfunction"): p
-                 for d in DATA.glob("*/functions") for p in d.rglob("*.mcfunction")}
+                 for r in DATA_ROOTS for d in r.glob("*/functions") for p in d.rglob("*.mcfunction")}
     function_tags = {f"#{d.parent.parent.name}:{p.relative_to(d).as_posix()[:-len('.json')]}": p
-                     for d in DATA.glob("*/tags/functions") for p in d.rglob("*.json")}
-    powers = {resource_id(p, d, ".json"): p for d in DATA.glob("*/powers") for p in d.rglob("*.json")}
-    origins = {resource_id(p, d, ".json"): p for d in DATA.glob("*/origins") for p in d.rglob("*.json")}
+                     for r in DATA_ROOTS for d in r.glob("*/tags/functions") for p in d.rglob("*.json")}
+    powers = {resource_id(p, d, ".json"): p for r in DATA_ROOTS for d in r.glob("*/powers") for p in d.rglob("*.json")}
+    origins = {resource_id(p, d, ".json"): p for r in DATA_ROOTS for d in r.glob("*/origins") for p in d.rglob("*.json")}
 
-    for path in DATA.rglob("*.json"):
+    check_sources(report)
+    for path in (p for r in DATA_ROOTS for p in r.rglob("*.json")):
         load_json(path, report)
 
     power_json = {pid: load_json(p, report) for pid, p in powers.items()}
@@ -186,6 +192,15 @@ def main() -> int:
     return 1 if report.errors else 0
 
 
+def check_sources(report: Report):
+    """Two sources (shared folders or origins) writing the same pack or script file."""
+    for collect in (pack_sources.datapack_files, pack_sources.script_files):
+        try:
+            collect()
+        except pack_sources.SourceConflict as conflict:
+            report.error("origins", str(conflict))
+
+
 def check_pack_meta(report: Report):
     meta_path = REPO / "pack.mcmeta"
     if not meta_path.exists():
@@ -219,6 +234,9 @@ def check_power(pid: str, path: Path, data: dict, all_powers: dict, report: Repo
 
 def check_origins(origins: dict, powers: dict, report: Report):
     used = set()
+    for script in pack_sources.script_files().values():
+        for block in JS_ORIGIN_POWERS.findall(script.read_text(encoding="utf-8")):
+            used.update(JS_ID.findall(block))
     for oid, path in origins.items():
         data = load_json(path, report) or {}
         for field in ("name", "description", "icon"):
@@ -234,7 +252,7 @@ def check_origins(origins: dict, powers: dict, report: Report):
 
 
 def check_layers(origins: dict, report: Report):
-    for layer_path in DATA.glob("*/origin_layers/*.json"):
+    for layer_path in (p for r in DATA_ROOTS for p in r.glob("*/origin_layers/*.json")):
         layer = load_json(layer_path, report) or {}
         if layer_path.parent.parent.name == "origins" and layer.get("replace"):
             report.warn(layer_path, "replace: true on an Origins layer removes every other origin from it")
@@ -260,7 +278,7 @@ def check_scoreboards(functions: dict, power_json: dict, powers: dict, commands,
 
 def check_tags(commands, report: Report):
     added, used = set(), {}
-    for script in SCRIPTS.rglob("*.js"):
+    for script in pack_sources.script_files().values():
         added.update(JS_TAG_LITERAL.findall(script.read_text(encoding="utf-8")))
     for source, command in commands:
         for pattern in TAG_ADD:
@@ -277,12 +295,13 @@ def check_entity_type_tags(commands, report: Report):
     for source, command in commands:
         for ref in ENTITY_TYPE_TAG_REF.findall(command):
             namespace, path = ref.split(":")
-            if namespace == NAMESPACE and not (DATA / namespace / "tags" / "entity_types" / f"{path}.json").exists():
+            tag_file = Path(namespace) / "tags" / "entity_types" / f"{path}.json"
+            if namespace == NAMESPACE and not any((r / tag_file).exists() for r in DATA_ROOTS):
                 report.error(source, f"uses missing entity type tag #{ref}")
 
 
 def check_scripts(report: Report) -> int:
-    scripts = sorted(SCRIPTS.rglob("*.js"))
+    scripts = sorted(pack_sources.script_files().values())
     node = shutil.which("node")
     if not node:
         report.warn("kubejs", "node is not installed, so script syntax was not checked")

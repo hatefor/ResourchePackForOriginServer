@@ -2,6 +2,7 @@
 paths:
   - "resourcepack/**"
   - "tools/photon/**"
+  - "origins/*/effects.py"
   - "kubejs/server_scripts/ordertest/components/photon_fx.js"
   - "kubejs/server_scripts/ordertest/components/display_shell.js"
   - "kubejs/server_scripts/ordertest/components/meridian_particles.js"
@@ -24,7 +25,7 @@ The long form is `CLAUDE.md` section 5. Read it before making or changing an eff
 | Particles use `normal`, never `force` | `force` ignores the player's setting and sends to 512 blocks |
 | Every coordinate goes through `ctx.fmt`; never `Math.PI` | NaN fails the command silently; Rhino has no Math constants |
 | Done means a scripted-run screenshot was read, at noon, inside and outside | Server tests cannot see anything |
-| Effects are code in `tools/photon/effects/`, built by `generate.py` | The `.fx` files are build output; edit the code, never the file |
+| Effects are code in `origins/<name>/effects.py` (or shared ones in `tools/photon/effects/`), built by `generate.py` | The `.fx` files are build output; edit the code, never the file |
 | A builder setter only changes keys present in Photon's own templates | Unknown keys are ignored silently; dump a template first |
 
 These limits were measured by VoidSpell on Photon for 26.x. The generator here is the 1.20.1 port, rebuilt on

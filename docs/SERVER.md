@@ -25,7 +25,7 @@ From the newest [release](https://github.com/hatefor/ResourchePackForOriginServe
 
 | File | Where it goes |
 |---|---|
-| `ordertest-kubejs.zip` | Unzip into the server folder (the one with `mods/`). It creates `kubejs/server_scripts/ordertest/` |
+| `ordertest-kubejs.zip` | Unzip into the server folder (the one with `mods/`). It creates `kubejs/server_scripts/ordertest/` (the engine) and `kubejs/server_scripts/origins/` (every origin) |
 | `ordertest.zip` | Into `<world folder>/datapacks/`. The world folder is named by `level-name` in `server.properties`, usually `world` |
 
 ## 3. Resource pack
@@ -73,7 +73,7 @@ Players have `/domain cast` (same as typing the phrase) and `/domain name`.
 | What changed | What to do |
 |---|---|
 | Effects | Nothing. With the `latest` link, players get the new pack on their next join |
-| Scripts (`kubejs/`) | Replace `kubejs/server_scripts/ordertest/` with the one from the newest release's `ordertest-kubejs.zip`, then run `/reload` |
+| Scripts (`kubejs/`) | Replace both `kubejs/server_scripts/ordertest/` and `kubejs/server_scripts/origins/` with the newest release's `ordertest-kubejs.zip`, then run `/reload`. Update scripts and datapack together whenever a release adds or renames an origin or effect |
 | Datapack | Replace `ordertest.zip` in `datapacks/` with the newest release's, then `/reload` |
 | Mod versions | Only when the guides change them; players must update Photon to the same version |
 

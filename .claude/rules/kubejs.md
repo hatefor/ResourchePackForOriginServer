@@ -1,6 +1,7 @@
 ---
 paths:
   - "kubejs/**"
+  - "origins/**/*.js"
 ---
 
 # KubeJS engine (KubeJS 2001.6.5, Rhino, Forge 1.20.1)
