@@ -21,9 +21,11 @@ Read `.claude/rules/kubejs.md` (and `datapack.md` for hooks) first.
 
 ## 2. Build
 
-- A component is one file `components/<id>.js`: `// priority: 500`, an IIFE, `global.OrderTest.component('<id>',
-  { defaults: {...}, <hooks> })`. Copy the closest existing one (`potion_effect` for a per-member effect,
-  `sphere_barrier` for per-tick world logic, `sounds` for open/close only).
+- A component is one file `components/<use case>/<id>.js` (folders: catching, barrier, visuals, feedback, effects,
+  bridges; see `components/README.md`): `// priority: 500`, an IIFE, `global.OrderTest.component('<id>',
+  { defaults: {...}, <hooks> })`. Copy the closest existing one (`effects/potion_effect` for a per-member effect,
+  `barrier/sphere_barrier` for per-tick world logic, `feedback/sounds` for open/close only). A component only one
+  origin uses goes in that origin's folder instead.
 - Every number a user might tune goes in `defaults`.
 - A domain is a `global.OrderTest.domain('<Name>', {...})` call: in its origin's folder (`origins/<name>/domain.js`),
   or in `kubejs/server_scripts/ordertest/domains/` when no single origin owns it.

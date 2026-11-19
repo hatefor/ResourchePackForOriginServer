@@ -3,9 +3,7 @@ paths:
   - "resourcepack/**"
   - "tools/photon/**"
   - "origins/*/effects.py"
-  - "kubejs/server_scripts/ordertest/components/photon_fx.js"
-  - "kubejs/server_scripts/ordertest/components/display_shell.js"
-  - "kubejs/server_scripts/ordertest/components/meridian_particles.js"
+  - "kubejs/server_scripts/ordertest/components/visuals/**"
   - "tools/dev_client/**"
 ---
 
